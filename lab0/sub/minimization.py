@@ -18,6 +18,10 @@ class SolveMinProbl:
         plt.plot(n, w)
         plt.xlabel('n')
         plt.ylabel('w(n)')
+        plt.xticks(ticks=range(self.Nf),
+                   labels=['motor_UPDRS', 'total_UPDRS', 'Jitter(%)', 'Jitter(Abs)', 'Jitter:RAP', 'Jitter:PPQ5',
+                           'Jitter:DDP', 'Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5', 'Shimmer:APQ11', 'Shimmer:DDA',
+                           'NHR', 'HNR', 'RPDE', 'DFA', 'PPE'], rotation='vertical')
         plt.grid()
         plt.title(title)
         plt.show()
@@ -27,7 +31,7 @@ class SolveMinProbl:
         print('the optimum weight vector is: ')
         print(self.sol)  # w
         return
-    def plot_err(self, title='Square error', logy=0, logx=0):
+    def plot_err(self, title='Square error', logy=1, logx=0):
         err = self.err
         plt.figure()
         if(logy == 0) & (logx == 0):
@@ -91,7 +95,7 @@ class SolveStoch(SolveMinProbl):
         row = np.zeros((1, self.Nf), dtype=float)
         for it in range(Nit):
             for i in range(self.Nf):
-                for j in range(Nf):
+                for j in range(self.Nf):
                     row[0, j] = A[i, j]
                 grad = 2 * np.dot(row.T, (np.dot(row, w) - y[i]))
                 # A[:, i] column all the rows of the i column
@@ -120,26 +124,34 @@ class SolveMini(SolveMinProbl):
         self.sol = w
         self.min = self.err[it, 1]
 class SolveConj(SolveMinProbl):
-    def run(self, Nit):
-        self.err = np.zeros((Nit, 2), dtype=float)
+    def run(self):
+        self.err = np.zeros((self.Nf, 2), dtype=float)
         A = self.matr
         y = self.vect
         w = np.zeros((self.Nf, 1), dtype=float)
         it = 0
-        Q = np.dot(A.T, A)
-        b = np.dot(A.T, y)
-        g = -1 * b
-        d = -1 * g
-        for it in range(Nit):
-            for k in range(self.Np):
-                if np.dot(np.dot(d.T, Q), d) == 0:
-                    break
-                a = -1 * np.dot(d.T, g)/np.dot(np.dot(d.T, Q), d)
-                w = w + a * d
-                g = g + a * np.dot(Q, d)
-                beta = np.dot(np.dot(g.T, Q), d)/np.dot(np.dot(d.T, Q), d)
-                d = -1 * g + beta*d
+        Q = 2 * np.dot(A.T, A)
+        b = 2 * np.dot(A.T, y)
+        g = -b
+        d = -g
+        for it in range(self.Nf):
+            #if np.dot(np.dot(d.T, Q), d) == 0:
+            #   break
+            a = -1 * np.dot(d.T, g)/np.dot(np.dot(d.T, Q), d)
+            w = w + a * d
+            g = g + a * np.dot(Q, d)
+            beta = np.dot(np.dot(g.T, Q), d)/np.dot(np.dot(d.T, Q), d)
+            d = -1 * g + beta*d
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
         self.sol = w
         self.min = self.err[it, 1]
+
+class SolveRidge(SolveMinProbl):
+    def run(self, lamb=0.5):
+        A = self.matr
+        y = self.vect
+        w=np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)-lamb*np.eye(A.shape[1])), A.T), y)
+        self.sol = w
+        self.min = np.linalg.norm(np.dot(A, w) - y)
+

@@ -1,5 +1,6 @@
 from sub.minimization import *
 import numpy as np
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     np.random.seed(7)
@@ -8,6 +9,7 @@ if __name__ == "__main__":
     Nf = 4  # col
     A = np.random.randn(Np, Nf)  # gaussian random var
     y = np.random.randn(Np, 1)
+
     m = SolveLLS(y, A)
     m.run()
     m.print_result('LLS')
@@ -39,6 +41,6 @@ if __name__ == "__main__":
     mb.plot_err('Minibach : square error', logy, logx)
 
     conj = SolveConj(y, A)
-    conj.run(Nit)
+    conj.run()
     conj.print_result('Conjugate')
     conj.plot_err('Conjugate : square error', logy, logx)
