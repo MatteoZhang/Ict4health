@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from lab0.sub.minimization import *
+from lab0.sub.min import *
 
 # std = (z - zmean) / deviation
 
@@ -51,68 +51,18 @@ if __name__ == "__main__":
 
     np.random.seed(1)
     logx = 0
-    logy = 1
+    logy = 0
     Nit = 100
-    gamma = 1e-3
+    gamma = 1e-5
     N = 2
     lamb = 0.3
 
-    m = SolveLLS(y_train, X_train)
+    m = SolveLLS(y_train, X_train, y_val, X_val)
     m.run()
     m.print_result('LLS')
 
-    g = SolveGrad(y_train, X_train)
-    g.run(1e-5, Nit)
+    g = SolveGrad(y_train, X_train, y_val, X_val)
+    g.run(gamma, Nit)
     g.print_result('Gradient algorithm')
     g.plot_err('Gradient algorithm : square error', logy, logx)
-
-    sd = SolveSteepDesc(y_train, X_train)
-    sd.run(Nit)
-    sd.print_result('Steepest Descent algorithm')
-    sd.plot_err('Steepest Descent : square error', logy, logx)
-
-
-    st = SolveStoch(y_train, X_train)
-    st.run(Nit, Nf, gamma)
-    st.print_result('Stochastic gradient algorithm')
-    st.plot_err('Stochastic gradient : square error', logy, logx)
-
-    mb = SolveMini(y_train, X_train)
-    mb.run(Nit, N, gamma)
-    mb.print_result('Minibach')
-    mb.plot_err('Minibach : square error', logy, logx)
-
-    conj = SolveConj(y_train, X_train)
-    conj.run()
-    conj.print_result('Conjugate')
-    conj.plot_err('Conjugate : square error', logy, logx)
-
-    ridge = SolveRidge(y_train, X_train)
-    ridge.run(lamb)
-    ridge.print_result('Ridge')
-    ridge.plot_w('Ridge : square error')
-
-    m.plot_w('LLS')
-    g.plot_w('w:Grad')
-    sd.plot_w('w:Steep')
-    st.plot_w('w:Stoch')
-    mb.plot_w('w:MiniB')
-    conj.plot_w('w:Conjugate')
-    ridge.plot_w('w:Ridge')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    g.print_hat('hat')

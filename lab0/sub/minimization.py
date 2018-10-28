@@ -97,7 +97,7 @@ class SolveStoch(SolveMinProbl):
             for i in range(self.Nf):
                 for j in range(self.Nf):
                     row[0, j] = A[i, j]
-                grad = 2 * np.dot(row.T, (np.dot(row, w) - y[i]))
+                grad = 2 * row.T * (np.dot(row, w) - y[i])
                 # A[:, i] column all the rows of the i column
                 w = w - gamma * grad
             self.err[it, 0] = it
@@ -151,7 +151,8 @@ class SolveRidge(SolveMinProbl):
     def run(self, lamb=0.5):
         A = self.matr
         y = self.vect
-        w=np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)-lamb*np.eye(A.shape[1])), A.T), y)
+        I =np.eye(self.Nf)
+        w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+lamb*I), A.T), y)
         self.sol = w
         self.min = np.linalg.norm(np.dot(A, w) - y)
 

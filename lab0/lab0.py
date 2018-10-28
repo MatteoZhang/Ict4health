@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     np.random.seed(7)
     plt.close('all')
-    Np = 4  # row
+    Np = 100  # row
     Nf = 4  # col
     A = np.random.randn(Np, Nf)  # gaussian random var
     y = np.random.randn(Np, 1)
@@ -15,9 +15,9 @@ if __name__ == "__main__":
     m.print_result('LLS')
     m.plot_w('LLS')
     Nit = 500
-    gamma = 1e-3
+    gamma = 1e-5
     logx = 0
-    logy = 0
+    logy = 1
     N = 2
 
     g = SolveGrad(y, A)
@@ -44,3 +44,8 @@ if __name__ == "__main__":
     conj.run()
     conj.print_result('Conjugate')
     conj.plot_err('Conjugate : square error', logy, logx)
+
+    rd = SolveRidge(y, A)
+    rd.run()
+    rd.print_result('Ridge')
+    rd.plot_w('Ridge')
