@@ -52,8 +52,8 @@ if __name__ == "__main__":
     np.random.seed(1)
     logx = 0
     logy = 0
-    Nit = 100
-    gamma = 1e-5
+    Nit = 5000
+    gamma = 1e-4
     N = 2
     lamb = 0.3
 
