@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from lab0.sub.min import *
+from sub.min import *
 
 # std = (z - zmean) / deviation
 
@@ -12,10 +12,6 @@ if __name__ == "__main__":
     x.plot()
     realdata = x.values  # if there is () = method while without it 's an attribute
     #np.random.shuffle(realdata)
-
-    ##################################
-    # shuffle is for the final version
-    ##################################
 
     print("Matrix inside the file:\n", realdata)
     print("shape: ", np.shape(realdata))
@@ -54,15 +50,16 @@ if __name__ == "__main__":
     logy = 0
     Nit = 500
     gamma = 1e-5
-    N = 2
     lamb = 0.3
 
     m = SolveLLS(y_train, X_train, y_val, X_val)
     m.run()
     m.print_result('LLS')
+    m.plot_w('LLS')
 
     g = SolveGrad(y_train, X_train, y_val, X_val)
     g.run(gamma, Nit)
     g.print_result('Gradient algorithm')
     g.plot_err('Gradient algorithm : square error', logy, logx)
-    g.print_hat('hat')
+    g.print_hat('yhat_train vs y_train for Gradient', 'y_train', 'yhat_train', y_train, X_train)
+    g.print_hat('yhat_val vs y_val for Gradient', 'y_val', 'yhat_val', y_val, X_val)

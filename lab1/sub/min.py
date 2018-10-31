@@ -62,12 +62,20 @@ class SolveMinProbl:
         plt.grid()
         plt.show()
         return
-    def print_hat(self, title):
+    def print_hat(self, title, xlabel, ylabel, y, A):
         plt.figure()
         w = self.sol
-        yhat_train = np.dot(self.matr, w)
-        plt.scatter(yhat_train, self.vect)
+        yhat = np.dot(A, w)
+        plt.scatter(y, yhat)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
         plt.title(title)
+
+        plt.figure()
+        plt.hist(yhat-y, 50)
+        plt.xlabel('bins')
+        plt.ylabel('yhat-y')
+        plt.title('histogram related to: '+title)
         plt.grid()
         plt.show()
 
@@ -90,15 +98,17 @@ class SolveGrad(SolveMinProbl):
             grad = 2*np.dot(A.T, (np.dot(A, w)-y))
             w = w - gamma * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w)-y)
-            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w)-y_val)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w)-y)**2/self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w)-y_val)**2/self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveSteepDesc(SolveMinProbl):
     def run(self, Nit):
-        self.err = np.zeros((Nit, 2), dtype=float)
+        self.err = np.zeros((Nit, 3), dtype=float)
         A = self.matr
         y = self.vect
+        A_val = self.matr_val
+        y_val = self.vect_val
         w = np.random.rand(self.Nf, 1)  # uniform pdf random var range 0,1
         it = 0
         for it in range(Nit):
@@ -107,14 +117,17 @@ class SolveSteepDesc(SolveMinProbl):
             gamma2 = (np.linalg.norm(grad)**2)/np.dot(np.dot(grad.T, H), grad)
             w = w - gamma2 * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveStoch(SolveMinProbl):
     def run(self, Nit, Nf, gamma):
-        self.err = np.zeros((Nit, 2), dtype=float)
+        self.err = np.zeros((Nit, 3), dtype=float)
         A = self.matr
         y = self.vect
+        A_val = self.matr_val
+        y_val = self.vect_val
         w = np.random.rand(self.Nf, 1)  # uniform pdf random var range 0,1
         it = 0
         row = np.zeros((1, self.Nf), dtype=float)
@@ -125,16 +138,19 @@ class SolveStoch(SolveMinProbl):
                 grad = 2 * row.T * (np.dot(row, w) - y[i])
                 w = w - gamma * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveMini(SolveMinProbl):
     def run(self, Nit, N, gamma): #N is number of minibatches
         if (N > self.Np) | (self.Np % N != 0):
             print("function not valid")
-        self.err = np.zeros((Nit, 2), dtype=float)
+        self.err = np.zeros((Nit, 3), dtype=float)
         A = self.matr
         y = self.vect
+        A_val = self.matr_val
+        y_val = self.vect_val
         w = np.random.rand(self.Nf, 1)  # uniform pdf random var range 0,1
         it = 0
         m = int(self.Np/N)
@@ -144,14 +160,17 @@ class SolveMini(SolveMinProbl):
                     grad = 2 * np.dot(A[j:(j*m+m), :].T, (np.dot(A[j:(j*m+m), :], w) - y[j:(j*m+m)]))
                     w = w - gamma * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveConj(SolveMinProbl):
     def run(self):
-        self.err = np.zeros((self.Nf, 2), dtype=float)
+        self.err = np.zeros((self.Nf, 3), dtype=float)
         A = self.matr
         y = self.vect
+        A_val = self.matr_val
+        y_val = self.vect_val
         w = np.zeros((self.Nf, 1), dtype=float)
         it = 0
         Q = 2 * np.dot(A.T, A)
@@ -167,7 +186,8 @@ class SolveConj(SolveMinProbl):
             beta = np.dot(np.dot(g.T, Q), d)/np.dot(np.dot(d.T, Q), d)
             d = -1 * g + beta*d
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
         self.sol = w
         self.min = self.err[it, 1]
 
