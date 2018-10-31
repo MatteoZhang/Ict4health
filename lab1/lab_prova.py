@@ -37,7 +37,7 @@ if __name__ == "__main__":
     data_val_norm = (data_val - mean)/std
     data_test_norm = (data_test - mean)/std
 
-    F0 = 7
+    F0 = 1
     y_train = data_train_norm[:, F0]
     X_train = np.delete(data_train_norm, F0, 1)
     y_val = data_val_norm[:, F0]
@@ -52,8 +52,8 @@ if __name__ == "__main__":
     np.random.seed(1)
     logx = 0
     logy = 0
-    Nit = 5000
-    gamma = 1e-4
+    Nit = 500
+    gamma = 1e-5
     N = 2
     lamb = 0.3
 

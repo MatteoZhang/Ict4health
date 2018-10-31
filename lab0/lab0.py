@@ -10,15 +10,16 @@ if __name__ == "__main__":
     A = np.random.randn(Np, Nf)  # gaussian random var
     y = np.random.randn(Np, 1)
 
+    Nit = 500
+    gamma = 1e-4
+    logx = 0
+    logy = 1
+    N = Np
+
     m = SolveLLS(y, A)
     m.run()
     m.print_result('LLS')
     m.plot_w('LLS')
-    Nit = 500
-    gamma = 1e-5
-    logx = 0
-    logy = 1
-    N = 2
 
     g = SolveGrad(y, A)
     g.run(gamma, Nit * 10)
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     sd.plot_err('Steepest Descent : square error', logy, logx)
 
     st = SolveStoch(y, A)
-    st.run(Nit, Nf, gamma)
+    st.run(Nit, gamma)
     st.print_result('Stochastic gradient algorithm')
     st.plot_err('Stochastic gradient : square error', logy, logx)
 

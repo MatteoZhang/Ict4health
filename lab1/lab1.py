@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from lab0.sub.minimization import *
+from sub.min import *
 
 # std = (z - zmean) / deviation
 
@@ -11,11 +11,7 @@ if __name__ == "__main__":
     x.describe()
     x.plot()
     realdata = x.values  # if there is () = method while without it 's an attribute
-    #np.random.shuffle(realdata)
-
-    ##################################
-    # shuffle is for the final version
-    ##################################
+    np.random.shuffle(realdata)
 
     print("Matrix inside the file:\n", realdata)
     print("shape: ", np.shape(realdata))
@@ -53,9 +49,8 @@ if __name__ == "__main__":
     logx = 0
     logy = 1
     Nit = 100
-    gamma = 1e-3
-    N = 2
-    lamb = 0.3
+    gamma = 1e-5
+    lamb = 0.1
 
     m = SolveLLS(y_train, X_train)
     m.run()
@@ -71,16 +66,10 @@ if __name__ == "__main__":
     sd.print_result('Steepest Descent algorithm')
     sd.plot_err('Steepest Descent : square error', logy, logx)
 
-
     st = SolveStoch(y_train, X_train)
     st.run(Nit, Nf, gamma)
     st.print_result('Stochastic gradient algorithm')
     st.plot_err('Stochastic gradient : square error', logy, logx)
-
-    mb = SolveMini(y_train, X_train)
-    mb.run(Nit, N, gamma)
-    mb.print_result('Minibach')
-    mb.plot_err('Minibach : square error', logy, logx)
 
     conj = SolveConj(y_train, X_train)
     conj.run()
@@ -96,7 +85,6 @@ if __name__ == "__main__":
     g.plot_w('w:Grad')
     sd.plot_w('w:Steep')
     st.plot_w('w:Stoch')
-    mb.plot_w('w:MiniB')
     conj.plot_w('w:Conjugate')
     ridge.plot_w('w:Ridge')
 

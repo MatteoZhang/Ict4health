@@ -18,10 +18,6 @@ class SolveMinProbl:
         plt.plot(n, w)
         plt.xlabel('n')
         plt.ylabel('w(n)')
-        plt.xticks(ticks=range(self.Nf),
-                   labels=['motor_UPDRS', 'total_UPDRS', 'Jitter(%)', 'Jitter(Abs)', 'Jitter:RAP', 'Jitter:PPQ5',
-                           'Jitter:DDP', 'Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5', 'Shimmer:APQ11', 'Shimmer:DDA',
-                           'NHR', 'HNR', 'RPDE', 'DFA', 'PPE'], rotation='vertical')
         plt.grid()
         plt.title(title)
         plt.show()
@@ -86,7 +82,7 @@ class SolveSteepDesc(SolveMinProbl):
         self.sol = w
         self.min = self.err[it, 1]
 class SolveStoch(SolveMinProbl):
-    def run(self, Nit, Nf, gamma):
+    def run(self, Nit, gamma):
         self.err = np.zeros((Nit, 2), dtype=float)
         A = self.matr
         y = self.vect
@@ -94,11 +90,10 @@ class SolveStoch(SolveMinProbl):
         it = 0
         row = np.zeros((1, self.Nf), dtype=float)
         for it in range(Nit):
-            for i in range(self.Nf):
+            for i in range(self.Np):
                 for j in range(self.Nf):
                     row[0, j] = A[i, j]
-                grad = 2 * row.T * (np.dot(row, w) - y[i])
-                # A[:, i] column all the rows of the i column
+                grad = 2 * np.dot(row.T,(np.dot(row, w) - y[i]))
                 w = w - gamma * grad
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
@@ -151,7 +146,7 @@ class SolveRidge(SolveMinProbl):
     def run(self, lamb=0.5):
         A = self.matr
         y = self.vect
-        I =np.eye(self.Nf)
+        I = np.eye(self.Nf)
         w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+lamb*I), A.T), y)
         self.sol = w
         self.min = np.linalg.norm(np.dot(A, w) - y)

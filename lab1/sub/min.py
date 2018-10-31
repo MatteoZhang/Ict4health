@@ -2,24 +2,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class SolveMinProbl:
-    def __init__(self, y, A, y_val, A_val):  # 111 and identity matrix
-        self.matr = A  # matrix A allocating memory for parameters ST we don't need to call
-        self.Np = y.shape[0]  # rows shape tell us the shape of the matrix
-        self.Nf = A.shape[1]  # columns
-        self.vect = y  # col vector
+    def __init__(self, y, A, y_val, A_val):  # initialization of the variable
+        self.matr = A  # matrix and other allocations
+        self.vect = y
         self.matr_val = A_val
         self.vect_val = y_val
+        self.Np = A.shape[0]  # shape[0] is rows so y is a column vector
+        self.Nf = A.shape[1]  # columns
         self.sol = np.zeros((self.Nf, 1), dtype=float)  # column vector w solution
         self.min = 0.0
         self.err = 0
         return
     def plot_w(self,title = 'solution'):
         w = self.sol  # already initialized self.sol in the previous method
-        n = np.arange(self.Nf)
+        n = np.arange(self.Nf)  # number fo feature
         plt.figure()
         plt.plot(n, w)
         plt.xlabel('n')
         plt.ylabel('w(n)')
+
+        #this is only for the lab1 not lab0
         plt.xticks(ticks=range(self.Nf),
                    labels=['motor_UPDRS', 'total_UPDRS', 'Jitter(%)', 'Jitter(Abs)', 'Jitter:RAP', 'Jitter:PPQ5',
                            'Jitter:DDP', 'Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5', 'Shimmer:APQ11', 'Shimmer:DDA',
@@ -117,11 +119,10 @@ class SolveStoch(SolveMinProbl):
         it = 0
         row = np.zeros((1, self.Nf), dtype=float)
         for it in range(Nit):
-            for i in range(self.Nf):
+            for i in range(self.Np):
                 for j in range(self.Nf):
                     row[0, j] = A[i, j]
                 grad = 2 * row.T * (np.dot(row, w) - y[i])
-                # A[:, i] column all the rows of the i column
                 w = w - gamma * grad
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
@@ -178,4 +179,3 @@ class SolveRidge(SolveMinProbl):
         w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+lamb*I), A.T), y)
         self.sol = w
         self.min = np.linalg.norm(np.dot(A, w) - y)
-
