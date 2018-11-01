@@ -6,7 +6,7 @@ if __name__ == "__main__":
     np.random.seed(7)
     plt.close('all')
     Np = 100  # row
-    Nf = 4  # col
+    Nf = 9  # col
     A = np.random.randn(Np, Nf)  # gaussian random var
     y = np.random.randn(Np, 1)
 
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     m.plot_w('LLS')
 
     g = SolveGrad(y, A)
-    g.run(gamma, Nit * 10)
+    g.run(gamma, Nit)
     g.print_result('Gradient algorithm')
     g.plot_err('Gradient algorithm : square error', logy, logx)
 
