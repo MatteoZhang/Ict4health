@@ -3,28 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sub.min import *
 
-# std = (z - zmean) / deviation
-
 if __name__ == "__main__":
-    x = pd.read_csv("parkinsons_updrs.data")
+    x = pd.read_csv("parkinsons_updrs.cvs")
     x.info()
     x.describe()
-    x.plot()
-    realdata = x.values  # if there is () = method while without it 's an attribute
+    realdata = x.values
     np.random.shuffle(realdata)
 
-    print("Matrix inside the file:\n", realdata)
-    print("shape: ", np.shape(realdata))
-
     data = realdata[:, 4:22]
-    print("Useful data :\n", data)
     Np, Nf = np.shape(data)
-    print("shape: patients ", Np, "features ", Nf)
 
     data_train = data[0:int(Np/2), :]
     data_val = data[int(Np/2):int(Np*0.75), :]
     data_test = data[int(Np*0.75):Np, :]
-    print("fine")
 
     mean = np.mean(data_train, 0)
     std = np.std(data_train, 0)
@@ -50,7 +41,7 @@ if __name__ == "__main__":
     logy = 1
     Nit = 100
     gamma = 1e-5
-    lamb = 0.1
+    lamb = 0
 
     m = SolveLLS(y_train, X_train, y_val, X_val)
     m.run()
@@ -83,13 +74,14 @@ if __name__ == "__main__":
     ridge = SolveRidge(y_train, X_train, y_val, X_val)
     ridge.run(lamb)
     ridge.print_result('Ridge')
+    best_lamb = ridge.run(lamb)
 
-    '''m.plot_w('w:LLS')
+    m.plot_w('w:LLS')
     g.plot_w('w:Grad')
     sd.plot_w('w:Steep')
     st.plot_w('w:Stoch')
     conj.plot_w('w:Conjugate')
-    ridge.plot_w('w:Ridge')'''
+    ridge.plot_w('w:Ridge')
 
 
 

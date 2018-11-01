@@ -194,7 +194,8 @@ class SolveRidge(SolveMinProbl):
     def run(self, lamb=0.5):
         A = self.matr
         y = self.vect
-        I =np.eye(self.Nf)
+        I = np.eye(self.Nf)
         w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+lamb*I), A.T), y)
         self.sol = w
         self.min = np.linalg.norm(np.dot(A, w) - y)
+        return lamb
