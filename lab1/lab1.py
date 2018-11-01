@@ -1,30 +1,31 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sub.min import *
 
 if __name__ == "__main__":
-    x = pd.read_csv("parkinsons_updrs.cvs")
-    x.info()
-    x.describe()
-    realdata = x.values
-    np.random.shuffle(realdata)
+    x = pd.read_csv("parkinsons_updrs.csv")
+    x.info()  # the panda framework display an easier to read matrix
+    realdata = x.values  # convert the values in the file into a matrix specifically an Ndarray
+    np.random.shuffle(realdata)  # the real data is shuffled using numpy
+    np.random.seed(1)  # random seed grant us an comparable results obtained in each algorithm
 
-    data = realdata[:, 4:22]
-    Np, Nf = np.shape(data)
+    data = realdata[:, 4:22]  # specifications of the lab : neglect the first 4 columns
+    Np, Nf = np.shape(data)  # Np(# of rows) is the number of patients and Nf(# of columns) is the number of features
 
-    data_train = data[0:int(Np/2), :]
-    data_val = data[int(Np/2):int(Np*0.75), :]
-    data_test = data[int(Np*0.75):Np, :]
+    data_train = data[0:int(Np/2), :]  # the training data is 50% of the whole data set
+    data_val = data[int(Np/2):int(Np*0.75), :]  # validation data set 25%
+    data_test = data[int(Np*0.75):Np, :]  # test data set 25%
 
-    mean = np.mean(data_train, 0)
-    std = np.std(data_train, 0)
+    mean = np.mean(data_train, 0)  # returns a row of means
+    std = np.std(data_train, 0)  # returns a row of standard deviations
 
+    # standardizing our data means that an eventual offset will be not considered
     data_train_norm = (data_train - mean)/std
     data_val_norm = (data_val - mean)/std
     data_test_norm = (data_test - mean)/std
 
-    F0 = 1
+    F0 = 1  # F0 is the feature we want to choose in order to be the regressand in our case  it is the Total UPDRS
+    # regressands and regressors set up
     y_train = data_train_norm[:, F0]
     X_train = np.delete(data_train_norm, F0, 1)
     y_val = data_val_norm[:, F0]
@@ -32,16 +33,17 @@ if __name__ == "__main__":
     y_test = data_test_norm[:, F0]
     X_test = np.delete(data_test_norm, F0, 1)
 
+    # with the slicing operation we have to keep in mind to check the resulting shape
+    # print(np.shape(y_train)) to check
     y_train = y_train.reshape(y_train.shape[0], 1)
     y_val = y_val.reshape(y_val.shape[0], 1)
     y_test = y_test.reshape(y_test.shape[0], 1)
 
-    np.random.seed(1)
+    # some inizialization before starting the algorithms
     logx = 0
     logy = 1
-    Nit = 100
+    Nit = 300
     gamma = 1e-5
-    lamb = 0
 
     m = SolveLLS(y_train, X_train, y_val, X_val)
     m.run()
@@ -72,9 +74,9 @@ if __name__ == "__main__":
     conj.print_hat('yhat_train vs y_train for Conjugate', 'y_train', 'yhat_train', y_train, X_train)
 
     ridge = SolveRidge(y_train, X_train, y_val, X_val)
-    ridge.run(lamb)
+    ridge.run()
     ridge.print_result('Ridge')
-    best_lamb = ridge.run(lamb)
+    ridge.run()
 
     m.plot_w('w:LLS')
     g.plot_w('w:Grad')

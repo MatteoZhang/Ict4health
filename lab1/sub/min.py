@@ -10,9 +10,7 @@ class SolveMinProbl:
         self.Np = A.shape[0]  # shape[0] is rows so y is a column vector
         self.Nf = A.shape[1]  # columns
         self.sol = np.zeros((self.Nf, 1), dtype=float)  # column vector w solution
-        self.min = 0.0
         self.err = 0
-        return
     def plot_w(self,title = 'solution'):
         w = self.sol  # already initialized self.sol in the previous method
         n = np.arange(self.Nf)  # number fo feature
@@ -28,12 +26,10 @@ class SolveMinProbl:
         plt.grid()
         plt.title(title)
         plt.show()
-        return
     def print_result(self , title):
         print(title, ' :')
         print('the optimum weight vector is: ')
         print(self.sol)  # w
-        return
     def plot_err(self, title='Square error', logy=1, logx=0):
         err = self.err
         plt.figure()
@@ -60,7 +56,6 @@ class SolveMinProbl:
         plt.margins(0.01, 0.1)
         plt.grid()
         plt.show()
-        return
     def print_hat(self, title, xlabel, ylabel, y, A):
         plt.figure()
         w = self.sol
@@ -84,7 +79,6 @@ class SolveLLS(SolveMinProbl):  # this class belongs to SolveMinProbl
         y = self.vect
         w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)), A.T), y)
         self.sol = w
-        self.min = np.linalg.norm(np.dot(A, w)-y)
 class SolveGrad(SolveMinProbl):
     def run(self, gamma, Nit):
         self.err = np.zeros((Nit, 3), dtype=float)
@@ -98,9 +92,8 @@ class SolveGrad(SolveMinProbl):
             w = w - gamma * grad
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w)-y)**2/self.Np
-            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w)-y_val)**2/self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w)-y_val)**2/(self.Np/2)
         self.sol = w
-        self.min = self.err[it, 1]
 class SolveSteepDesc(SolveMinProbl):
     def run(self, Nit):
         self.err = np.zeros((Nit, 3), dtype=float)
@@ -117,9 +110,8 @@ class SolveSteepDesc(SolveMinProbl):
             w = w - gamma2 * grad
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
-            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / (self.Np/2)
         self.sol = w
-        self.min = self.err[it, 1]
 class SolveStoch(SolveMinProbl):
     def run(self, Nit, Nf, gamma):
         self.err = np.zeros((Nit, 3), dtype=float)
@@ -138,9 +130,8 @@ class SolveStoch(SolveMinProbl):
                 w = w - gamma * grad
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
-            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / (self.Np/2)
         self.sol = w
-        self.min = self.err[it, 1]
 class SolveMini(SolveMinProbl):
     def run(self, Nit, N, gamma): #N is number of minibatches
         if (N > self.Np) | (self.Np % N != 0):
@@ -160,9 +151,8 @@ class SolveMini(SolveMinProbl):
                     w = w - gamma * grad
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
-            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / (self.Np/2)
         self.sol = w
-        self.min = self.err[it, 1]
 class SolveConj(SolveMinProbl):
     def run(self):
         self.err = np.zeros((self.Nf, 3), dtype=float)
@@ -186,16 +176,34 @@ class SolveConj(SolveMinProbl):
             d = -1 * g + beta*d
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
-            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / (self.Np/2)
         self.sol = w
-        self.min = self.err[it, 1]
 
 class SolveRidge(SolveMinProbl):
-    def run(self, lamb=0.5):
+    def run(self):
         A = self.matr
         y = self.vect
+        A_val = self.matr_val
+        y_val = self.vect_val
         I = np.eye(self.Nf)
-        w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+lamb*I), A.T), y)
+        lamb = 150
+        self.err = np.zeros((lamb, 3), dtype=float)
+        for it in range(lamb):
+            w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+float(it/lamb)*I), A.T), y)
+            self.err[it, 0] = float(it/lamb)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y) ** 2 / self.Np
+            self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / (self.Np / 2)
+        best_lamb = 0.01
+        w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A) + best_lamb * I), A.T), y)
         self.sol = w
-        self.min = np.linalg.norm(np.dot(A, w) - y)
-        return lamb
+        err = self.err
+        plt.figure()
+        plt.semilogy(err[:, 0], err[:, 1], label='train')
+        plt.semilogy(err[:, 0], err[:, 2], label='val')
+        plt.xlabel('lambda')
+        plt.ylabel('e(lambda)')
+        plt.legend()
+        plt.title('Ridge error respect to lambda')
+        plt.margins(0.01, 0.1)
+        plt.grid()
+        plt.show()
