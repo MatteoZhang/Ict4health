@@ -4,10 +4,9 @@ import matplotlib.pyplot as plt
 from sub.min import *
 
 if __name__ == "__main__":
-    x = pd.read_csv("parkinsons_updrs.data")
+    x = pd.read_csv("parkinsons_updrs.csv")
     x.info()
     x.describe()
-    x.plot()
     realdata = x.values
     np.random.shuffle(realdata)
 
