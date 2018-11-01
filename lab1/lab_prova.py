@@ -3,28 +3,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sub.min import *
 
-# std = (z - zmean) / deviation
-
 if __name__ == "__main__":
     x = pd.read_csv("parkinsons_updrs.data")
     x.info()
     x.describe()
     x.plot()
-    realdata = x.values  # if there is () = method while without it 's an attribute
-    #np.random.shuffle(realdata)
-
-    print("Matrix inside the file:\n", realdata)
-    print("shape: ", np.shape(realdata))
+    realdata = x.values
+    np.random.shuffle(realdata)
 
     data = realdata[:, 4:22]
-    print("Useful data :\n", data)
     Np, Nf = np.shape(data)
-    print("shape: patients ", Np, "features ", Nf)
 
     data_train = data[0:int(Np/2), :]
     data_val = data[int(Np/2):int(Np*0.75), :]
     data_test = data[int(Np*0.75):Np, :]
-    print("fine")
 
     mean = np.mean(data_train, 0)
     std = np.std(data_train, 0)
@@ -32,6 +24,9 @@ if __name__ == "__main__":
     data_train_norm = (data_train - mean)/std
     data_val_norm = (data_val - mean)/std
     data_test_norm = (data_test - mean)/std
+
+    mean_check = np.mean(data_train_norm, 0)
+    std_check = np.std(data_train_norm, 0)
 
     F0 = 1
     y_train = data_train_norm[:, F0]
@@ -48,7 +43,7 @@ if __name__ == "__main__":
     np.random.seed(1)
     logx = 0
     logy = 0
-    Nit = 500
+    Nit = 100
     gamma = 1e-5
     lamb = 0.3
 

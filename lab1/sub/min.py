@@ -21,10 +21,9 @@ class SolveMinProbl:
         plt.xlabel('n')
         plt.ylabel('w(n)')
 
-        #this is only for the lab1 not lab0
         plt.xticks(ticks=range(self.Nf),
-                   labels=['motor_UPDRS', 'total_UPDRS', 'Jitter(%)', 'Jitter(Abs)', 'Jitter:RAP', 'Jitter:PPQ5',
-                           'Jitter:DDP', 'Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5', 'Shimmer:APQ11', 'Shimmer:DDA',
+                   labels=['motor_UPDRS', 'Jitter(%)', 'Jitter(Abs)', 'Jitter:RAP', 'Jitter:PPQ5',
+                           'Jitter:DDP', 'Shimmer', 'Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5', 'Shimmer:APQ11', 'Shimmer:DDA',
                            'NHR', 'HNR', 'RPDE', 'DFA', 'PPE'], rotation='vertical')
         plt.grid()
         plt.title(title)
@@ -66,7 +65,8 @@ class SolveMinProbl:
         plt.figure()
         w = self.sol
         yhat = np.dot(A, w)
-        plt.scatter(y, yhat)
+        plt.plot(np.linspace(-3, 3), np.linspace(-3, 3), 'orange')
+        plt.scatter(y, yhat, s=5)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(title)
@@ -78,7 +78,6 @@ class SolveMinProbl:
         plt.title('histogram related to: '+title)
         plt.grid()
         plt.show()
-
 class SolveLLS(SolveMinProbl):  # this class belongs to SolveMinProbl
     def run(self):  # the input
         A = self.matr
