@@ -10,7 +10,7 @@ if __name__ == "__main__":
     A = np.random.randn(Np, Nf)  # gaussian random var
     y = np.random.randn(Np, 1)
 
-    Nit = 500
+    Nit = 5000
     gamma = 1e-4
     logx = 0
     logy = 1

@@ -62,7 +62,7 @@ class SolveGrad(SolveMinProbl):
             grad = 2*np.dot(A.T, (np.dot(A, w)-y))
             w = w - gamma * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w)-y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w)-y)**2/self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveSteepDesc(SolveMinProbl):
@@ -78,7 +78,7 @@ class SolveSteepDesc(SolveMinProbl):
             gamma2 = (np.linalg.norm(grad)**2)/np.dot(np.dot(grad.T, H), grad)
             w = w - gamma2 * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveStoch(SolveMinProbl):
@@ -96,7 +96,7 @@ class SolveStoch(SolveMinProbl):
                 grad = 2 * np.dot(row.T,(np.dot(row, w) - y[i]))
                 w = w - gamma * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveMini(SolveMinProbl):
@@ -115,7 +115,7 @@ class SolveMini(SolveMinProbl):
                     grad = 2 * np.dot(A[j:(j*m+m), :].T, (np.dot(A[j:(j*m+m), :], w) - y[j:(j*m+m)]))
                     w = w - gamma * grad
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
         self.sol = w
         self.min = self.err[it, 1]
 class SolveConj(SolveMinProbl):
@@ -138,7 +138,7 @@ class SolveConj(SolveMinProbl):
             beta = np.dot(np.dot(g.T, Q), d)/np.dot(np.dot(d.T, Q), d)
             d = -1 * g + beta*d
             self.err[it, 0] = it
-            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)
+            self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y)**2/self.Np
         self.sol = w
         self.min = self.err[it, 1]
 
