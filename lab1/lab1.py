@@ -24,14 +24,28 @@ if __name__ == "__main__":
     data_val_norm = (data_val - mean)/std
     data_test_norm = (data_test - mean)/std
 
+    # checking if the mean and standard deviation are respected
+    mean_check = np.mean(data_train, 0)  # returns a row of means
+    std_check = np.std(data_train, 0)  # returns a row of standard deviations
+
     F0 = 1  # F0 is the feature we want to choose in order to be the regressand in our case  it is the Total UPDRS
-    # regressands and regressors set up
+    # regressands y and regressors X set up
     y_train = data_train_norm[:, F0]
     X_train = np.delete(data_train_norm, F0, 1)
     y_val = data_val_norm[:, F0]
     X_val = np.delete(data_val_norm, F0, 1)
     y_test = data_test_norm[:, F0]
     X_test = np.delete(data_test_norm, F0, 1)
+
+    '''y_train = data_train[:, F0]
+    X_train = np.delete(data_train, F0, 1)
+    X_train = np.insert(X_train, np.shape(X_train[0]), values=1, axis=1)
+    y_val = data_val[:, F0]
+    X_val = np.delete(data_val, F0, 1)
+    X_val = np.insert(X_val, np.shape(X_val[0]), values=1, axis=1)
+    y_test = data_test[:, F0]
+    X_test = np.delete(data_test, F0, 1)
+    X_test = np.insert(X_test, np.shape(X_test[0]), values=1, axis=1)'''
 
     # with the slicing operation we have to keep in mind to check the resulting shape
     # print(np.shape(y_train)) to check
@@ -45,38 +59,42 @@ if __name__ == "__main__":
     Nit = 300
     gamma = 1e-5
 
-    m = SolveLLS(y_train, X_train, y_val, X_val)
+    # these objects will be explained in the min file
+    m = SolveLLS(y_train, X_train, y_val, X_val, mean, std)
     m.run()
     m.print_result('LLS')
 
-    g = SolveGrad(y_train, X_train, y_val, X_val)
+    g = SolveGrad(y_train, X_train, y_val, X_val, mean, std)
     g.run(1e-5, Nit)
     g.print_result('Gradient algorithm')
     g.plot_err('Gradient algorithm : square error', logy, logx)
     g.print_hat('yhat_train vs y_train for Gradient', 'y_train', 'yhat_train', y_train, X_train)
+    g.print_hat('yhat_test vs y_test for Gradient', 'y_test', 'yhat_test', y_test, X_test)
 
     sd = SolveSteepDesc(y_train, X_train, y_val, X_val)
     sd.run(Nit)
     sd.print_result('Steepest Descent algorithm')
     sd.plot_err('Steepest Descent : square error', logy, logx)
     sd.print_hat('yhat_train vs y_train for Steepest Descent', 'y_train', 'yhat_train', y_train, X_train)
+    sd.print_hat('yhat_test vs y_test for Steepest Descent', 'y_test', 'yhat_test', y_test, X_test)
 
     st = SolveStoch(y_train, X_train, y_val, X_val)
     st.run(Nit, Nf, gamma)
     st.print_result('Stochastic gradient algorithm')
     st.plot_err('Stochastic gradient : square error', logy, logx)
     st.print_hat('yhat_train vs y_train for Stochastic', 'y_train', 'yhat_train', y_train, X_train)
+    st.print_hat('yhat_test vs y_test for Stochastic', 'y_test', 'yhat_test', y_test, X_test)
 
     conj = SolveConj(y_train, X_train, y_val, X_val)
     conj.run()
     conj.print_result('Conjugate')
     conj.plot_err('Conjugate : square error', logy, logx)
     conj.print_hat('yhat_train vs y_train for Conjugate', 'y_train', 'yhat_train', y_train, X_train)
+    conj.print_hat('yhat_test vs y_test for Conjugate', 'y_test', 'yhat_test', y_test, X_test)
 
     ridge = SolveRidge(y_train, X_train, y_val, X_val)
     ridge.run()
     ridge.print_result('Ridge')
-    ridge.run()
 
     m.plot_w('w:LLS')
     g.plot_w('w:Grad')
