@@ -124,14 +124,14 @@ class SolveMinProbl:
         w = self.sol
         yhat = np.dot(A, w)
         plt.plot(np.linspace(-3, 3), np.linspace(-3, 3), 'orange')
-        plt.scatter(y, yhat, s=5)
+        plt.scatter(yhat, y, s=5)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(title)
         plt.figure()
-        plt.hist(yhat-y, 50)
+        plt.hist(y-yhat, 50)
         plt.xlabel('bins')
-        plt.ylabel('yhat-y')
+        plt.ylabel('y-yhat')
         plt.title('histogram related to: '+title)
         plt.grid()
         plt.show()
@@ -167,6 +167,8 @@ class SolveGrad(SolveMinProbl):
             self.err[it, 1] = np.linalg.norm(np.dot(A, w)-y)**2/self.Np
             self.err[it, 2] = np.linalg.norm(np.dot(A_val, w)-y_val)**2/(self.Np/2)
         self.sol = w
+        '''mse_g = self.err[it, 1]
+        mse_gval = self.err[it, 2]'''
 class SolveSteepDesc(SolveMinProbl):
     def run(self, Nit):
         self.err = np.zeros((Nit, 3), dtype=float)
@@ -261,7 +263,7 @@ class SolveRidge(SolveMinProbl):
         lamb = 150
         self.err = np.zeros((lamb, 3), dtype=float)
         for it in range(lamb):
-            w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+float(it/lamb)*I), A.T), y)
+            w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+float(it*5/lamb)*I), A.T), y)
             self.err[it, 0] = float(it/lamb)
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y) ** 2 / self.Np
             self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / (self.Np /2)
