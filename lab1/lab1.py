@@ -3,7 +3,7 @@ import numpy as np
 from sub.min import *
 
 if __name__ == "__main__":
-    np.random.seed(1)  # random seed grant us an comparable results obtained in each algorithm
+    np.random.seed(2)  # random seed grant us an comparable results obtained in each algorithm
     x = pd.read_csv("parkinsons_updrs.csv")
     x.info()  # the panda framework display an easier to read matrix
     realdata = x.values  # convert the values in the file into a matrix specifically an Ndarray

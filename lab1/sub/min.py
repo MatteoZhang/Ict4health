@@ -135,6 +135,7 @@ class SolveMinProbl:
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(title)
+        plt.grid()
         plt.figure()
         plt.hist(y-yhat, 50)
         plt.xlabel('bins')
