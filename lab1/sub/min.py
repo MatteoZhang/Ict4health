@@ -104,7 +104,7 @@ class SolveMinProbl:
         plt.xlabel('n')
         plt.ylabel('e(n)')
         plt.legend()
-        plt.title(title)
+        plt.title(title+' (mse)')
         plt.margins(0.01, 0.1)
         plt.grid()
         plt.show()
