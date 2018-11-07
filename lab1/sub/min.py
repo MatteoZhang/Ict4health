@@ -143,7 +143,7 @@ class SolveMinProbl:
         plt.title('histogram related to: '+title)
         plt.grid()
         plt.show()
-    def print_mse(self, mse_train,mse_val,mse_test):
+    def print_mse(self, mse_train,mse_val,mse_test,std):
         """
         Parameters
         ----------
@@ -153,9 +153,9 @@ class SolveMinProbl:
         """
         plt.figure()
         plt.title("Comparison of the means quare errors of the last interaction\n of each Algorithm")
-        plt.plot(np.arange(len(mse_train)), mse_train, label='train')
-        plt.plot(np.arange(len(mse_val)), mse_val, label='validation')
-        plt.plot(np.arange(len(mse_test)), mse_test, label='test')
+        plt.plot(np.arange(len(mse_train)), mse_train*std, label='train')
+        plt.plot(np.arange(len(mse_val)), mse_val*std, label='validation')
+        plt.plot(np.arange(len(mse_test)), mse_test*std, label='test')
         plt.ylabel('error of the last interaction')
         plt.xticks(ticks=range(6),
                    labels=['LLS','Gradient','Steepest Descent','Stochastic','Conjugate','Ridge'], rotation='vertical')

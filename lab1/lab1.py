@@ -103,7 +103,7 @@ if __name__ == "__main__":
     ridge.plot_w('w:Ridge')
 
     final_comparison = SolveMinProbl(y_train, X_train, y_val, X_val, y_test, X_test)
-    final_comparison.print_mse(mse_train, mse_val, mse_test)
+    final_comparison.print_mse(mse_train, mse_val, mse_test, std[F0])
 
 
 
