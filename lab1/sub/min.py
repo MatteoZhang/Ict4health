@@ -108,7 +108,7 @@ class SolveMinProbl:
         plt.margins(0.01, 0.1)
         plt.grid()
         plt.show()
-    def print_hat(self, title, xlabel, ylabel, y, A, mean , std):
+    def print_hat(self, title, label1, label2, y, A, mean , std):
         """
         Paramenters
         -----------
@@ -131,9 +131,9 @@ class SolveMinProbl:
         yhat = (np.dot(A, w) * std)+mean
         y = (y * std)+mean
         plt.plot(np.linspace(0, 60), np.linspace(0, 60), 'orange')
-        plt.scatter(yhat, y, s=5)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.scatter(y,yhat, s=5)
+        plt.xlabel(label1)
+        plt.ylabel(label2)
         plt.title(title)
         plt.grid()
         plt.figure()
@@ -153,9 +153,9 @@ class SolveMinProbl:
         """
         plt.figure()
         plt.title("Comparison of the means quare errors of the last interaction\n of each Algorithm")
-        plt.plot(np.arange(len(mse_train)), mse_train*std, label='train')
-        plt.plot(np.arange(len(mse_val)), mse_val*std, label='validation')
-        plt.plot(np.arange(len(mse_test)), mse_test*std, label='test')
+        plt.plot(np.arange(len(mse_train)), mse_train*(std**2), label='train')
+        plt.plot(np.arange(len(mse_val)), mse_val*(std**2), label='validation')
+        plt.plot(np.arange(len(mse_test)), mse_test*(std**2), label='test')
         plt.ylabel('error of the last interaction')
         plt.xticks(ticks=range(6),
                    labels=['LLS','Gradient','Steepest Descent','Stochastic','Conjugate','Ridge'], rotation='vertical')
