@@ -95,12 +95,12 @@ if __name__ == "__main__":
     ridge.print_hat('yhat_train vs y_train for Ridge', 'yhat_train', 'y_train', y_train, X_train, mean[F0],std[F0])
     ridge.print_hat('yhat_test vs y_test for Ridge', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
 
-    m.plot_w('w:LLS')
-    g.plot_w('w:Grad')
-    sd.plot_w('w:Steep')
-    st.plot_w('w:Stoch')
-    conj.plot_w('w:Conjugate')
-    ridge.plot_w('w:Ridge')
+    m.plot_w('optimum weight vector for LLS')
+    g.plot_w('optimum weight vector for GA')
+    sd.plot_w('optimum weight vector for SD')
+    st.plot_w('optimum weight vector for SG')
+    conj.plot_w('optimum weight vector for CA')
+    ridge.plot_w('optimum weight vector for RA')
 
     final_comparison = SolveMinProbl(y_train, X_train, y_val, X_val, y_test, X_test)
     final_comparison.print_mse(mse_train, mse_val, mse_test, std[F0])
