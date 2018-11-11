@@ -315,7 +315,7 @@ class SolveRidge(SolveMinProbl):
         stop_lamb = 100
         self.err = np.zeros((stop_lamb, 4), dtype=float)
         for it in range(stop_lamb):
-            w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+float(it)*I), A.T), y)
+            w = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)+it*I), A.T), y)
             self.err[it, 0] = it
             self.err[it, 1] = np.linalg.norm(np.dot(A, w) - y) ** 2 / A.shape[0]
             self.err[it, 2] = np.linalg.norm(np.dot(A_val, w) - y_val) ** 2 / A_val.shape[0]

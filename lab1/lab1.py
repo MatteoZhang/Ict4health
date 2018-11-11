@@ -19,6 +19,7 @@ if __name__ == "__main__":
 
     mean = np.mean(data_train, 0)  # returns a row of means
     std = np.std(data_train, 0)  # returns a row of standard deviations
+    print("std deviation: ", std)
 
     # standardizing our data means that an eventual offset will be not considered
     data_train_norm = (data_train - mean)/std
