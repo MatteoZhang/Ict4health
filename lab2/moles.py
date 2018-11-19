@@ -110,5 +110,6 @@ while cond:
     else:
         cond=False
         # subset is the serach area
+plt.figure()
 plt.matshow(subset)
 
