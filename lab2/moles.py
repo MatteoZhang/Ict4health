@@ -1,3 +1,4 @@
+
 import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
@@ -6,7 +7,7 @@ from sklearn.cluster import KMeans
 np.set_printoptions(precision=2)# use only two decimal digits when printing numbers
 plt.close('all')# close previously opened pictures
 #filein='medium_risk_8.jpg';# file to be analyzed
-filein='moles/low_risk_1.jpg';# file to be analyzed
+filein='moles/medium_risk_1.jpg';# file to be analyzed
 im_or = mpimg.imread(filein)
 # im_or is Ndarray 583 x 584 x 3 unint8
 # plot the image, to check it is correct:
@@ -110,8 +111,4 @@ while cond:
     else:
         cond=False
         # subset is the serach area
-plt.figure()
-plt.matshow(subset)
-plt.pause(0.1)
-
 

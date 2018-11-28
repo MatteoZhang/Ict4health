@@ -5,7 +5,7 @@ from sklearn.cluster import KMeans
 
 np.set_printoptions(precision=2)
 plt.close('all')
-filein = 'moles/low_risk_1.jpg'
+filein = 'moles/medium_risk_1.jpg'
 im_original = mpimg.imread(filein)
 plt.figure()
 plt.imshow(im_original)
@@ -74,11 +74,5 @@ while cond:
     else:
         cond = False
 
-binary_image = subset
-plt.figure()
-plt.imshow(binary_image, cmap='Greys')
-plt.pause(0.1)
-
-plt.show()
 
 
