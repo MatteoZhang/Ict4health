@@ -1,4 +1,7 @@
-
+# -*- coding: utf-8 -*-
+"""
+@author: monica
+"""
 import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
@@ -6,10 +9,11 @@ from sklearn.cluster import KMeans
 
 np.set_printoptions(precision=2)# use only two decimal digits when printing numbers
 plt.close('all')# close previously opened pictures
-#filein='medium_risk_8.jpg';# file to be analyzed
-filein='moles/medium_risk_1.jpg';# file to be analyzed
+#filein='moles/medium_risk_8.jpg';# file to be analyzed
+#filein='moles/low_risk_4.jpg';# file to be analyzed
+filein='moles/melanoma_11.jpg'
 im_or = mpimg.imread(filein)
-# im_or is Ndarray 583 x 584 x 3 unint8
+# im_or is Ndarray 583 x 584 x 3 unint8 
 # plot the image, to check it is correct:
 plt.figure()
 plt.imshow(im_or)
@@ -24,9 +28,9 @@ N1,N2,N3=im_or.shape # note: N3 is 3, the number of elementary colors, i.e. red,
 # we resize the original image
 im_2D=im_or.reshape((N1*N2,N3))# im_2D has N1*N2 rows and N3 columns
 # pixel in position i.j goes to position k=(i-1)*N2+j)
-# im_2D(k,1) stores the amount of red of pixel k
-# im_2D(k,2) stores the amount of green of pixel k
-# im_2D(k,3) stores the amount of blue of pixel k
+# im_2D(k,1) stores the amount of red of pixel k 
+# im_2D(k,2) stores the amount of green of pixel k 
+# im_2D(k,3) stores the amount of blue of pixel k 
 # im_2D is a sequence of colors, that can take 2^24 different values
 Nr,Nc=im_2D.shape
 #%% get a simplified image with only Ncluster colors
@@ -58,14 +62,14 @@ plt.pause(0.1)
 #%% Find the centroid of the main mole
 
 #%% Preliminary steps to find the contour after the clustering
-#
+# 
 # 1: find the darkest color found by k-means, since the darkest color
 # corresponds to the mole:
 centroids=kmeans_centroids
 sc=np.sum(centroids,axis=1)
 i_col=sc.argmin()# index of the cluster that corresponds to the darkest color
 # 2: define the 2D-array where in position i,j you have the number of
-# the cluster pixel i,j belongs to
+# the cluster pixel i,j belongs to 
 im_clust=kmeans.labels_.reshape(N1,N2)
 # plt.matshow(im_clust)
 # 3: find the positions i,j where im_clust is equal to i_col
@@ -91,11 +95,11 @@ else:
     d=np.zeros((N_spots,1))
     for k in range(N_spots):
         d[k]=np.linalg.norm(center_image-centers[k,:])
-    center_mole=centers[d.argmin(),:]
+    center_mole=centers[d.argmin(),:]    
 # 6: take a subset of the image that includes the mole
 cond=True
 area_old=0
-step=10# each time the algorithm increases the area by 2*step pixels
+step=10# each time the algorithm increases the area by 2*step pixels 
 # horizontally and vertically
 c0=center_mole[0]
 c1=center_mole[1]
@@ -111,4 +115,4 @@ while cond:
     else:
         cond=False
         # subset is the serach area
-
+plt.matshow(subset)
