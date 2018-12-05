@@ -8,6 +8,6 @@ if __name__ == "__main__":
     feature = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr', 'bu', 'sc', 'sod',
                'pot', 'hemo', 'pcv', 'wbcc', 'rbcc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane', 'class']
     x = pd.read_csv("ckd/chronic_kidney_disease.arff",
-                    sep=',', na_values=['?', '\t?'], skiprows=0, header=None, usecols=column)
+                    sep=',', na_values=['?', '\t?'], skiprows=0, header=None, usecols=column, names=feature)
     x.info()
 
