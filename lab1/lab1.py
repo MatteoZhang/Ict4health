@@ -51,47 +51,47 @@ if __name__ == "__main__":
     logy = 1
     Nit = 300
     gamma = 1e-5
-    mse_train = np.zeros((6,1),dtype=float)
-    mse_val = np.zeros((6,1),dtype=float)
-    mse_test = np.zeros((6,1),dtype=float)
+    mse_train = np.zeros((6, 1), dtype=float)
+    mse_val = np.zeros((6, 1), dtype=float)
+    mse_test = np.zeros((6, 1), dtype=float)
 
     # these objects will be explained in the min file
     m = SolveLLS(y_train, X_train, y_val, X_val, y_test, X_test)
-    mse_train[0], mse_val[0],mse_test[0]=m.run()
+    mse_train[0], mse_val[0], mse_test[0] = m.run()
     m.print_result('LLS')
     m.print_hat('yhat_train vs y_train for LLs','yhat_train','y_train', y_train,X_train, mean[F0],std[F0])
     m.print_hat('yhat_test vs y_test for LLs', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
 
     g = SolveGrad(y_train, X_train, y_val, X_val, y_test, X_test)
-    mse_train[1], mse_val[1], mse_test[1]=g.run(1e-5, Nit)
+    mse_train[1], mse_val[1], mse_test[1] = g.run(1e-5, Nit)
     g.print_result('Gradient algorithm')
     g.plot_err('Gradient algorithm : square error', logy, logx)
     g.print_hat('yhat_train vs y_train for Gradient', 'yhat_train', 'y_train', y_train, X_train, mean[F0],std[F0])
     g.print_hat('yhat_test vs y_test for Gradient', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
 
     sd = SolveSteepDesc(y_train, X_train, y_val, X_val, y_test, X_test)
-    mse_train[2], mse_val[2], mse_test[2] =sd.run(Nit)
+    mse_train[2], mse_val[2], mse_test[2] = sd.run(Nit)
     sd.print_result('Steepest Descent algorithm')
     sd.plot_err('Steepest Descent : square error', logy, logx)
     sd.print_hat('yhat_train vs y_train for Steepest Descent', 'yhat_train','y_train',y_train, X_train,mean[F0],std[F0])
     sd.print_hat('yhat_test vs y_test for Steepest Descent', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
 
     st = SolveStoch(y_train, X_train, y_val, X_val, y_test, X_test)
-    mse_train[3], mse_val[3], mse_test[3] =st.run(Nit, Nf, gamma)
+    mse_train[3], mse_val[3], mse_test[3] = st.run(Nit, Nf, gamma)
     st.print_result('Stochastic gradient algorithm')
     st.plot_err('Stochastic gradient : square error', logy, logx)
     st.print_hat('yhat_train vs y_train for Stochastic', 'yhat_train', 'y_train', y_train, X_train, mean[F0],std[F0])
     st.print_hat('yhat_test vs y_test for Stochastic', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
 
     conj = SolveConj(y_train, X_train, y_val, X_val, y_test, X_test)
-    mse_train[4], mse_val[4], mse_test[4] =conj.run()
+    mse_train[4], mse_val[4], mse_test[4] = conj.run()
     conj.print_result('Conjugate')
     conj.plot_err('Conjugate : square error', logy, logx)
     conj.print_hat('yhat_train vs y_train for Conjugate', 'yhat_train', 'y_train', y_train, X_train, mean[F0],std[F0])
     conj.print_hat('yhat_test vs y_test for Conjugate', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
 
     ridge = SolveRidge(y_train, X_train, y_val, X_val, y_test, X_test)
-    mse_train[5], mse_val[5], mse_test[5] =ridge.run()
+    mse_train[5], mse_val[5], mse_test[5] = ridge.run()
     ridge.print_result('Ridge')
     ridge.print_hat('yhat_train vs y_train for Ridge', 'yhat_train', 'y_train', y_train, X_train, mean[F0],std[F0])
     ridge.print_hat('yhat_test vs y_test for Ridge', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
