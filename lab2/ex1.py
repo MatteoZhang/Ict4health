@@ -36,11 +36,31 @@ class Figure(object):
             im_2d_quantized[ind, :] = quant_color_kc
         return im_2d_quantized.reshape((self.N1, self.N2, self.N3))
 
+
+class Polish(object):
+    def __init__(self, subset_matrix):
+        self.subset = subset_matrix
+
+    def area(self):
+        return
+
+    def perimeter(self):
+        return
+
+
+class Circle(object):
+    def __init__(self, area_circle):
+        self.area = area_circle
+
+    def perimeter(self):
+        return
+
+
 if __name__ == '__main__':
     np.set_printoptions(precision=2)
     plt.close('all')
-    #filein = 'moles/melanoma_1.jpg'
-    #filein = 'moles/low_risk_1.jpg'
+    # filein = 'moles/melanoma_1.jpg'
+    # filein = 'moles/low_risk_1.jpg'
     filein = 'moles/medium_risk_1.jpg'
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
@@ -79,30 +99,45 @@ if __name__ == '__main__':
         for k in range(N_spots):
             d[k] = np.linalg.norm(center_image - centers[k, :])
         center_mole = centers[d.argmin(), :]
-        # 6: take a subset of the image that includes the mole
-    cond = True
-    area_old = 0
-    step = 10  # each time the algorithm increases the area by 2*step pixels
-    # horizontally and vertically
+    # 6: take a subset of the image that includes the mole
     c0 = center_mole[0]
     c1 = center_mole[1]
+    RR, CC = im_clust.shape
+    stepmax = min([c0, RR - c0, c1, CC - c1])
+    cond = True
+    area_old = 0
+    surf_old = 1
+    step = 10  # each time the algorithm increases the area by 2*step pixels
+    # horizontally and vertically
     im_sel = (im_clust == i_col)  # im_sel is a boolean NDarray with N1 rows and N2 columns
     im_sel = im_sel * 1  # im_sel is now an integer NDarray with N1 rows and N2 columns
     while cond:
         subset = im_sel[c0 - step:c0 + step + 1, c1 - step:c1 + step + 1]
         area = np.sum(subset)
-        if area > area_old:
+        Delta = np.size(subset) - surf_old
+        surf_old = np.size(subset)
+        if area > area_old + 0.01 * Delta:
             step = step + 10
             area_old = area
             cond = True
+            if step > stepmax:
+                cond = False
         else:
             cond = False
             # subset is the serach area
-
     plt.matshow(subset)
     plt.title('search area')
 
+    polished = Polish(subset)
+    area_polished = polished.area()
+    perimeter_polished = polished.peremeter()
+    circle = Circle(area_polished)
+    perimeter_circle = circle.perimeter()
+    ratio = perimeter_polished/perimeter_circle
+    print("Area: %s \nPerimeter: %s \nRatio: %s" % (area_polished, perimeter_polished, ratio))
+
     plt.show()
 
+# TODO  complete code
 
 

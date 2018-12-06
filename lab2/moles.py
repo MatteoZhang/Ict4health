@@ -9,9 +9,11 @@ from sklearn.cluster import KMeans
 
 np.set_printoptions(precision=2)# use only two decimal digits when printing numbers
 plt.close('all')# close previously opened pictures
-#filein='moles/medium_risk_8.jpg';# file to be analyzed
-#filein='moles/low_risk_4.jpg';# file to be analyzed
-filein='moles/melanoma_11.jpg'
+## 4 color levels filein='low_risk_10.jpg';# file to be analyzed
+## 4 color levels filein='melanoma_21.jpg';# file to be analyzed
+## 6 color levels filein='melanoma_27.jpg';# file to be analyzed
+## 4 color levels filein='medium_risk_1.jpg';# file to be analyzed
+filein='low_risk_4.jpg';# file to be analyzed
 im_or = mpimg.imread(filein)
 # im_or is Ndarray 583 x 584 x 3 unint8 
 # plot the image, to check it is correct:
@@ -97,21 +99,28 @@ else:
         d[k]=np.linalg.norm(center_image-centers[k,:])
     center_mole=centers[d.argmin(),:]    
 # 6: take a subset of the image that includes the mole
-cond=True
-area_old=0
-step=10# each time the algorithm increases the area by 2*step pixels 
-# horizontally and vertically
 c0=center_mole[0]
 c1=center_mole[1]
+RR,CC=im_clust.shape
+stepmax=min([c0,RR-c0,c1,CC-c1])
+cond=True
+area_old=0
+surf_old=1
+step=10# each time the algorithm increases the area by 2*step pixels 
+# horizontally and vertically
 im_sel=(im_clust==i_col)# im_sel is a boolean NDarray with N1 rows and N2 columns
 im_sel=im_sel*1# im_sel is now an integer NDarray with N1 rows and N2 columns
 while cond:
     subset=im_sel[c0-step:c0+step+1,c1-step:c1+step+1]
     area=np.sum(subset)
-    if area>area_old:
+    Delta=np.size(subset)-surf_old
+    surf_old=np.size(subset)
+    if area>area_old+0.01*Delta:
         step=step+10
         area_old=area
         cond=True
+        if step>stepmax:
+            cond=False
     else:
         cond=False
         # subset is the serach area
