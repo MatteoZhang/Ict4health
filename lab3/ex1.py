@@ -19,7 +19,7 @@ if __name__ == "__main__":
                                'no': 0, ' no': 0, '\tno': 0, 'no\t': 0,
                                'good': 1, ' good': 1, '\tgood': 1, 'good\t': 1,
                                'poor': 0, ' poor': 0, '\tpoor': 0, 'poor\t': 0,
-                               'ckd': 1, ' ckd': 1, '\tckd': 1, 'ckt\t': 1,
+                               'ckd': 1, ' ckd': 1, '\tckd': 1, 'ckd\t': 1,
                                'notckd': 0, ' notckd': 0, '\tnotckd': 0, 'notckd\t': 0})
 
     X_0 = data_polished.dropna(thresh=25).values.astype(float)
@@ -38,7 +38,8 @@ if __name__ == "__main__":
     X_norm = (X_0 - mean)/std
 
     data_train = np.zeros((X_1.shape[0], Nf), dtype=float)
-    print(data_train)
+
+
 
 
 
