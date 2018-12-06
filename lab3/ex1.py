@@ -35,4 +35,5 @@ if __name__ == "__main__":
     mean = mean.reshape(1, 25)
     std = std.reshape(1, 25)
     X_norm = (X - mean)/std
+    
 
