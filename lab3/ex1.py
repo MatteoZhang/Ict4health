@@ -22,18 +22,23 @@ if __name__ == "__main__":
                                'ckd': 1, ' ckd': 1, '\tckd': 1, 'ckt\t': 1,
                                'notckd': 0, ' notckd': 0, '\tnotckd': 0, 'notckd\t': 0})
 
-    realdata = data_polished.values
-    valid_20 = data_polished.dropna(thresh=20).values
-    Np, Nf = np.shape(valid_20)
-
-    X = (data_polished.dropna(thresh=25)).values.astype(float)
-    data_train = (data_polished.dropna(thresh=24)).values.astype(float)
+    X_0 = data_polished.dropna(thresh=25).values.astype(float)
+    X_1 = data_polished.dropna(thresh=24).values.astype(float)
+    X_2 = data_polished.dropna(thresh=23).values.astype(float)
+    X_3 = data_polished.dropna(thresh=22).values.astype(float)
+    X_4 = data_polished.dropna(thresh=21).values.astype(float)
+    X_5 = data_polished.dropna(thresh=20).values.astype(float)
+    Np, Nf = np.shape(X_5)
     y_train = np.zeros(25, dtype=float)
 
-    mean = np.mean(X, axis=0)
-    std = np.std(X, axis=0)
-    mean = mean.reshape(1, 25)
-    std = std.reshape(1, 25)
-    X_norm = (X - mean)/std
-    
+    mean = np.mean(X_0, axis=0)
+    std = np.std(X_0, axis=0)
+    mean = mean.reshape(1, Nf)
+    std = std.reshape(1, Nf)
+    X_norm = (X_0 - mean)/std
+
+    data_train = np.zeros((X_1.shape[0], Nf), dtype=float)
+    print(data_train)
+
+
 

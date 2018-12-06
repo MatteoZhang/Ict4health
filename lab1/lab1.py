@@ -9,7 +9,6 @@ if __name__ == "__main__":
     realdata = x.values  # convert the values in the file into a matrix specifically an Ndarray
     np.random.shuffle(realdata)  # the real data is shuffled using numpy
 
-
     data = realdata[:, 4:22]  # specifications of the lab : neglect the first 4 columns
     Np, Nf = np.shape(data)  # Np(# of rows) is the number of patients and Nf(# of columns) is the number of features
 
@@ -38,7 +37,6 @@ if __name__ == "__main__":
     X_val = np.delete(data_val_norm, F0, 1)
     y_test = data_test_norm[:, F0]
     X_test = np.delete(data_test_norm, F0, 1)
-
 
     # with the slicing operation we have to keep in mind to check the resulting shape
     # print(np.shape(y_train)) to check
