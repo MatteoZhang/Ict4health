@@ -38,5 +38,8 @@ if __name__ == "__main__":
     data_train = np.zeros((X_1.shape[0], Nf), dtype=float)
     data_train = X_1.copy()
 
+    # find FO the index we want to regress
+    # data_train then normalize and for cicle for regression
+
 
 
