@@ -1,9 +1,7 @@
 import pandas as pd
-from sub.min import *
 import numpy as np
-import math
 
-#link = https://archive.ics.uci.edu/ml/datasets/chronic_kidney_disease
+# link = https://archive.ics.uci.edu/ml/datasets/chronic_kidney_disease
 if __name__ == "__main__":
     column = np.arange(25)
     feature = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr', 'bu', 'sc', 'sod',
@@ -38,8 +36,7 @@ if __name__ == "__main__":
     X_norm = (X_0 - mean)/std
 
     data_train = np.zeros((X_1.shape[0], Nf), dtype=float)
-
-
+    data_train = X_1.copy()
 
 
 
