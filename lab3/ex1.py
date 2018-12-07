@@ -35,11 +35,18 @@ if __name__ == "__main__":
     std = std.reshape(1, Nf)
     X_norm = (X_0 - mean)/std
 
-    data_train = np.zeros((X_1.shape[0], Nf), dtype=float)
-    data_train = X_1.copy()
+    data_train1 = np.zeros((X_1.shape[0], Nf), dtype=float)
+    data_train1 = X_1.copy()
 
+    # TODO see below
     # find FO the index we want to regress
     # data_train then normalize and for cicle for regression
+    # ridge on dataset see lab 1
+
+    Nit = 5000
+    gamma = 1e-4
+    logx = 0
+    logy = 1
 
 
 
