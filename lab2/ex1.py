@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from scipy.ndimage.morphology import binary_fill_holes
 
 
 class Figure(object):
@@ -40,6 +41,16 @@ class Figure(object):
 class Polish(object):
     def __init__(self, subset_matrix):
         self.subset = subset_matrix
+        self.n_row, self.n_col = self.subset.shape
+        self.polished = np.zeros((self.n_row, self.n_col), dtype=float)
+
+    def polish(self):
+        n_row = self.n_row
+        n_col = self.n_col
+        print("---polishing matrix with dimension %sx%s---" % (n_row, n_col))
+        self.polished = binary_fill_holes(self.subset).astype(int)
+        plt.matshow(self.polished)
+        plt.title("filled holes")
 
     def area(self):
         return
@@ -129,12 +140,13 @@ if __name__ == '__main__':
     plt.title('search area')
 
     polished = Polish(subset)
-    area_polished = polished.area()
-    perimeter_polished = polished.peremeter()
-    circle = Circle(area_polished)
-    perimeter_circle = circle.perimeter()
-    ratio = perimeter_polished/perimeter_circle
-    print("Area: %s \nPerimeter: %s \nRatio: %s" % (area_polished, perimeter_polished, ratio))
+    polished.polish()
+    #area_polished = polished.area()
+    #perimeter_polished = polished.peremeter()
+    #circle = Circle(area_polished)
+    #perimeter_circle = circle.perimeter()
+    #ratio = perimeter_polished/perimeter_circle
+    #print("Area: %s \nPerimeter: %s \nRatio: %s" % (area_polished, perimeter_polished, ratio))
 
     plt.show()
 
