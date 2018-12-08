@@ -91,8 +91,8 @@ if __name__ == "__main__":
     ridge = SolveRidge(y_train, X_train, y_val, X_val, y_test, X_test)
     mse_train[5], mse_val[5], mse_test[5] = ridge.run()
     ridge.print_result('Ridge')
-    ridge.print_hat('yhat_train vs y_train for Ridge', 'yhat_train', 'y_train', y_train, X_train, mean[F0],std[F0])
-    ridge.print_hat('yhat_test vs y_test for Ridge', 'yhat_test', 'y_test', y_test, X_test, mean[F0],std[F0])
+    ridge.print_hat('yhat_train vs y_train for Ridge', 'yhat_train', 'y_train', y_train, X_train, mean[F0], std[F0])
+    ridge.print_hat('yhat_test vs y_test for Ridge', 'yhat_test', 'y_test', y_test, X_test, mean[F0], std[F0])
 
     m.plot_w('optimum weight vector for LLS')
     g.plot_w('optimum weight vector for GA')

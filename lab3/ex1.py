@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from minimization import *
 
 # link = https://archive.ics.uci.edu/ml/datasets/chronic_kidney_disease
 if __name__ == "__main__":
@@ -27,7 +28,6 @@ if __name__ == "__main__":
     X_4 = data_polished.dropna(thresh=21).values.astype(float)
     X_5 = data_polished.dropna(thresh=20).values.astype(float)
     Np, Nf = np.shape(X_5)
-    y_train = np.zeros(25, dtype=float)
 
     mean = np.mean(X_0, axis=0)
     std = np.std(X_0, axis=0)
@@ -35,18 +35,33 @@ if __name__ == "__main__":
     std = std.reshape(1, Nf)
     X_norm = (X_0 - mean)/std
 
-    data_train1 = np.zeros((X_1.shape[0], Nf), dtype=float)
-    data_train1 = X_1.copy()
+    logx = 0
+    logy = 1
+    lamb = 10
+    j = 0
+    for array in X_1:
+        i = 0
+        j += 1
+        while i < X_1.shape[0]:
+            if np.isnan(array[i]):
+                F0 = i
+                y_train = X_norm[:, F0]
+                X_train = np.delete(X_norm, F0, 1)
+                y_train = y_train.reshape(y_train.shape[0], 1)
+                ridge = SolveRidge(y_train, X_train)
+                w = ridge.run(lamb)
+                # ridge.plot_w('optimum weight vector for Ridge Regression')
+                array_train = array[~np.isnan(array)]
+                y_to_sub = np.dot(array_train, w)
+                array[i] = y_to_sub
+                X_1[j] = array
+            i += 1
 
     # TODO see below
     # find FO the index we want to regress
     # data_train then normalize and for cicle for regression
     # ridge on dataset see lab 1
 
-    Nit = 5000
-    gamma = 1e-4
-    logx = 0
-    logy = 1
 
 
 

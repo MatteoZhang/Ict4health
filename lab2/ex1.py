@@ -50,7 +50,10 @@ class Polish(object):
         print("---polishing matrix with dimension %sx%s---" % (n_row, n_col))
         self.polished = binary_fill_holes(self.subset).astype(int)
         plt.matshow(self.polished)
-        plt.title("filled holes")
+        plt.title("hole filling")
+        # polishing outside
+
+
 
     def area(self):
         return
