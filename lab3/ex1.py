@@ -42,7 +42,10 @@ if __name__ == "__main__":
     for array in X_1:
         i = 0
         j += 1
-        while i < X_1.shape[0]:
+        # print("array: ", array.shape[0])
+        # print("X_1 shape: ", X_1.shape[1])
+        for i in range(X_1.shape[1]):
+            # print(array[i])
             if np.isnan(array[i]):
                 F0 = i
                 y_train = X_norm[:, F0]
@@ -55,8 +58,12 @@ if __name__ == "__main__":
                 y_to_sub = np.dot(array_train, w)
                 array[i] = y_to_sub
                 X_1[j] = array
-            i += 1
 
+    for array in X_1:
+        for i in range(X_1.shape[1]):
+            if np.isnan(array[i]):
+                print("nan alert")
+                
     # TODO see below
     # find FO the index we want to regress
     # data_train then normalize and for cicle for regression
