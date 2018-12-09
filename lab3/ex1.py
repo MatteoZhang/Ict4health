@@ -61,13 +61,10 @@ if __name__ == "__main__":
 
     for array in X_1:
         for i in range(X_1.shape[1]):
-            if np.isnan(array[i]):
-                print("nan alert")
+            print(array[i])
                 
     # TODO see below
-    # find FO the index we want to regress
-    # data_train then normalize and for cicle for regression
-    # ridge on dataset see lab 1
+    # find the value of nans and then sub it into Xs
 
 
 
