@@ -73,9 +73,9 @@ class Circle(object):
 if __name__ == '__main__':
     np.set_printoptions(precision=2)
     plt.close('all')
-    # filein = 'moles/melanoma_1.jpg'
+    filein = 'moles/melanoma_1.jpg'
     # filein = 'moles/low_risk_1.jpg'
-    filein = 'moles/medium_risk_1.jpg'
+    # filein = 'moles/medium_risk_1.jpg'
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
     fig_quantized = fig_original.quantized()

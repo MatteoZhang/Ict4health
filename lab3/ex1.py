@@ -54,21 +54,16 @@ if __name__ == "__main__":
                 ridge = SolveRidge(y_train, X_train)
                 w = ridge.run(lamb)
                 # ridge.plot_w('optimum weight vector for Ridge Regression')
-                array_train = array[~np.isnan(array)]
-                y_to_sub = np.dot(array_train, w)
+                tmp_mean = np.copy(np.delete(mean, F0))
+                tmp_std = np.copy(np.delete(std, F0))
+                array_train = (array[~np.isnan(array)] - tmp_mean) / tmp_std
+                y_to_sub = np.dot(array_train, w) * std[0, F0] + mean[0, F0]
                 array[i] = y_to_sub
                 X_1[j] = array
-
     for array in X_1:
         for i in range(X_1.shape[1]):
-            if np.isnan(array[i]):
-                print("nan alert")
+            print(array[i])
+                
 
     # TODO see below
-    # find FO the index we want to regress
-    # data_train then normalize and for cicle for regression
-    # ridge on dataset see lab 1
-
-
-
-
+    # find the value of nans and then sub it into Xs
