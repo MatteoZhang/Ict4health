@@ -63,7 +63,7 @@ if __name__ == "__main__":
         for i in range(X_1.shape[1]):
             if np.isnan(array[i]):
                 print("nan alert")
-                
+
     # TODO see below
     # find FO the index we want to regress
     # data_train then normalize and for cicle for regression
