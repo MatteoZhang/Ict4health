@@ -50,8 +50,8 @@ if __name__ == "__main__":
             w = ridge.run(lamb=10)
             tmp_mean = np.copy(np.delete(mean, F0))
             tmp_std = np.copy(np.delete(std, F0))
-            tmp_mean = tmp_mean.reshape(tmp_mean.shape[0], 1)
-            tmp_std = tmp_std.reshape(tmp_std.shape[0], 1)
+            # tmp_mean = tmp_mean.reshape(tmp_mean.shape[0], 1)
+            # tmp_std = tmp_std.reshape(tmp_std.shape[0], 1)
             array_train = (array[~np.isnan(array)] - tmp_mean) / tmp_std
             y_hat = np.dot(array_train, w) * std[0, F0] + mean[0, F0]
             for index in range(len(F0)):

@@ -73,9 +73,9 @@ class Circle(object):
 if __name__ == '__main__':
     np.set_printoptions(precision=2)
     plt.close('all')
-    filein = 'moles/melanoma_1.jpg'
-    # filein = 'moles/low_risk_1.jpg'
-    # filein = 'moles/medium_risk_1.jpg'
+    filein = 'moles/melanoma_4.jpg'
+    # filein = 'moles/low_risk_4.jpg'
+    # filein = 'moles/medium_risk_4.jpg'
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
     fig_quantized = fig_original.quantized()
@@ -150,7 +150,7 @@ if __name__ == '__main__':
     #perimeter_circle = circle.perimeter()
     #ratio = perimeter_polished/perimeter_circle
     #print("Area: %s \nPerimeter: %s \nRatio: %s" % (area_polished, perimeter_polished, ratio))
-
+    plt.tight_layout()
     plt.show()
 
 # TODO  complete code
