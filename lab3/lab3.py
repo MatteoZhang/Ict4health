@@ -54,9 +54,10 @@ if __name__ == "__main__":
             # tmp_std = tmp_std.reshape(tmp_std.shape[0], 1)
             array_train = (array[~np.isnan(array)] - tmp_mean) / tmp_std
             y_hat = np.dot(array_train, w) * std[0, F0] + mean[0, F0]
+            array_to_copy = np.copy(array)
             for index in range(len(F0)):
-                array[F0[index]] = y_hat[index]
-            X_5[j] = array
+                array_to_copy[F0[index]] = y_hat[index]
+            X_5[j-1] = array_to_copy
     # rounding the values
 
     # extend our method
