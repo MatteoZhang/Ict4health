@@ -1,12 +1,36 @@
 import pandas as pd
 import numpy as np
+import sklearn.tree as tree
 from minimization import *
+import graphviz
+
 
 # link = https://archive.ics.uci.edu/ml/datasets/chronic_kidney_disease
+def final_round(df):
+    df[df < 0] = 0
+    i = 0
+    for row in df['sg']:
+        if row not in [1.005, 1.010, 1.015, 1.020, 1.025]:
+            if row < (1.005 + 1.010)/2:
+                df.loc[i, 'sg'] = 1.005
+            elif row < (1.010 + 1.015)/2:
+                df.loc[i, 'sg'] = 1.010
+            elif row < (1.015 + 1.020)/2:
+                df.loc[i, 'sg'] = 1.015
+            elif row < (1.020 + 1.025)/2:
+                df.loc[i, 'sg'] = 1.020
+            else:
+                df.loc[i, 'sg'] = 1.025
+        # print(df.loc[i, 'sg']) check
+        i += 1
+    return df
+
+
 if __name__ == "__main__":
     column = np.arange(25)
     feature = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr', 'bu', 'sc', 'sod',
                'pot', 'hemo', 'pcv', 'wbcc', 'rbcc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane', 'class']
+    rounding = [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
     # for ckd.arff skiprows = 29
     x = pd.read_csv("ckd/chronic_kidney_disease_full.arff",
                     sep=',', na_values=['?', '\t?'], skiprows=145, header=None, usecols=column, names=feature)
@@ -59,7 +83,25 @@ if __name__ == "__main__":
                 array_to_copy[F0[index]] = y_hat[index]
             X_5[j-1] = array_to_copy
     # rounding the values
-    X = pd.DataFrame(X_5,columns=feature)
-    # extend our method
+    df_X = pd.DataFrame(X_5, columns=feature).astype(float)
+    decimal = pd.Series(rounding, index=feature)
+    df_X_rounded = df_X.round(decimal)
+    df_X_final_round = final_round(df_X_rounded)
+
+    data = df_X_final_round.iloc[:, 0:24]
+    target = df_X_final_round['class']
+    clf = tree.DecisionTreeClassifier("entropy")
+    clf = clf.fit(data, target)
+
+    dot_data = tree.export_graphviz(clf, out_file="Tree.dot",
+                                    feature_names=feature[0:-1],
+                                    class_names=['not ckd', 'ckd'],
+                                    filled=True, rounded=True,
+                                    special_characters=True)
+    graph = graphviz.Source(dot_data)
+    # download it https://graphviz.gitlab.io/_pages/Download/Download_windows.html
+    # C:\Program Files (x86)\Graphviz2.38\bin\dot.exe
+    # C:\Program Files (x86)\Graphviz2.38\bin>dot.exe -Tpng Tree.dot > Tree.png
+    # Tree is in the same folder as dot.exe also Tree.dot should be the same
     print("----END----")
 
