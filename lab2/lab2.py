@@ -6,8 +6,12 @@ import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from scipy.ndimage.morphology import binary_fill_holes
-
+import warnings
+warnings.filterwarnings(
+    action='ignore', module='matplotlib.figure', category=UserWarning,
+    message=('This figure includes Axes that are not compatible with tight_layout, '
+             'so results might be incorrect.')
+)
 
 class Figure(object):
     def __init__(self, file):
@@ -48,7 +52,7 @@ class Polish(object):
         n_row = self.n_row
         n_col = self.n_col
         print("---polishing matrix with dimension %sx%s---" % (n_row, n_col))
-        self.polished = binary_fill_holes(self.subset).astype(int)
+        self.polished = fill_holes(self.subset)
         plt.matshow(self.polished)
         plt.title("hole filling")
         # polishing outside
