@@ -65,6 +65,21 @@ def dilate(to_dilate):
     return to_dilate
 
 
+def floodfill(matrix, x, y):
+
+    if matrix[y, x] == 0:
+        matrix[y, x] = 2
+        #recursively invoke flood fill on all surrounding cells:
+        if x > 0:
+            floodfill(matrix,x-1,y)
+        if x < matrix.shape[0] - 1:
+            floodfill(matrix,x+1,y)
+        if y > 0:
+            floodfill(matrix,x,y-1)
+        if y < matrix.shape[1] - 1:
+            floodfill(matrix,x,y+1)
+
+
 if __name__ == '__main__':
     A = np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
@@ -79,8 +94,11 @@ if __name__ == '__main__':
                    [0, 1, 1, 1, 0, 0, 0, 0, 1, 0],
                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
-    B = dilate(A)
+    #B = dilate(A)
+    A[0][0] = 0
+    floodfill(A, 0, 0)
+    print(A)
     plt.matshow(A)
-    plt.matshow(B)
+    #plt.matshow(B)
     plt.show()
 
