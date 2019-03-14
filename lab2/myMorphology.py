@@ -9,96 +9,73 @@ warnings.filterwarnings(
 
 
 def fill_holes(toro):
-    row, col = toro.shape
+    col, row  = toro.shape
     tmp = np.copy(toro)
-    if tmp[int(np.round(row/2)),int(np.round(col/2))] == 0:
-        tmp[int(np.round(row/2)),int(np.round(col/2))] = 1
-    toro = tmp
+
     return toro
 
 
 def erode(to_erode):
-    row, col = to_erode.shape
+    col, row  = to_erode.shape
     tmp = np.copy(to_erode)
-    for i in range(1,row-1):
-        for j in range(1,col-1):
-            if tmp[i,j] == 1:
-                cnt = 0
-                try:
-                    if tmp[i-1,j] == 0:
-                        cnt += 1
-                    if tmp[i,j+1] == 0:
-                        cnt += 1
-                    if tmp[i+1,j] == 0:
-                        cnt += 1
-                    if tmp[i,j-1] == 0:
-                        cnt += 1
-                    if cnt >= 3:
-                        tmp[i,j] = 0
-                except IndexError:
-                    pass
+
     to_erode = tmp
     return to_erode
 
 
 def dilate(to_dilate):
-    row, col = to_dilate.shape
+    col, row = to_dilate.shape
     tmp = np.copy(to_dilate)
-    for i in range(1,row-1):
-        for j in range(1,col-1):
-            if tmp[i,j] == 0:
-                cnt = 0
-                try:
-                    if tmp[i-1,j] == 1:
-                        cnt += 1
-                    if tmp[i,j+1] == 1:
-                        cnt += 1
-                    if tmp[i+1,j] == 1:
-                        cnt += 1
-                    if tmp[i,j-1] == 1:
-                        cnt += 1
-                    if cnt >= 3:
-                        tmp[i,j] = 1
-                except IndexError:
-                    pass
+
     to_dilate = tmp
     return to_dilate
 
 
 def floodfill(matrix, x, y):
+    return matrix
 
-    if matrix[y, x] == 0:
-        matrix[y, x] = 2
-        #recursively invoke flood fill on all surrounding cells:
-        if x > 0:
-            floodfill(matrix,x-1,y)
-        if x < matrix.shape[0] - 1:
-            floodfill(matrix,x+1,y)
-        if y > 0:
-            floodfill(matrix,x,y-1)
-        if y < matrix.shape[1] - 1:
-            floodfill(matrix,x,y+1)
+def polish_dots(withdots):
+    col, row = withdots.shape
+    for i in range(col):
+        for j in range(row):
+            withdots[0, j] = 0
+            withdots[i, 0] = 0
+            withdots[col-1, j] = 0
+            withdots[i, row-1] = 0
+    for i in range(col):
+         for j in range(row):
+            if i > 0 and i < col-1 and j > 0 and j < row-1:
+                if withdots[i, j] == 1:
+                    if withdots[i-1, j] == 0 and withdots[i, j-1] == 0 and withdots[i+1, j] == 0 and withdots[i, j+1] == 0:
+                        withdots[i, j] = 0
+                if withdots[i, j] == 0:
+                    if withdots[i-1, j] == 1 and withdots[i, j-1] == 1 and withdots[i+1, j] == 1 and withdots[i, j+1] == 1:
+                        withdots[i, j] = 1
+    return withdots
+
 
 
 if __name__ == '__main__':
-    A = np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
-                   [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-                   [0, 1, 0, 0, 0, 1, 1, 1, 1, 0],
-                   [0, 1, 0, 0, 0, 1, 1, 1, 1, 0],
-                   [0, 1, 0, 0, 0, 0, 1, 1, 1, 0],
-                   [0, 1, 0, 0, 0, 1, 1, 0, 1, 0],
-                   [0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-                   [0, 1, 1, 1, 1, 1, 0, 0, 1, 0],
-                   [0, 1, 1, 1, 0, 0, 0, 0, 1, 0],
-                   [0, 1, 1, 1, 0, 0, 0, 0, 1, 0],
-                   [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
-    #B = dilate(A)
+    A = np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+                   [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1],
+                   [0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+                   [0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+                   [0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+                   [0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+                   [0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+                   [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0],
+                   [0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0],
+                   [0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+                   [0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+                   [0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
     A[0][0] = 0
-    floodfill(A, 0, 0)
     print(A)
+    print(A.shape)
     plt.matshow(A)
-    #plt.matshow(B)
+
+    B = polish_dots(A)
+    plt.matshow(B)
+
     plt.show()
 
