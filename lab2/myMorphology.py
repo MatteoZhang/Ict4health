@@ -8,6 +8,54 @@ warnings.filterwarnings(
 )
 
 
+def connected_label(matrix):
+    label = np.copy(matrix)
+    col, row = matrix.shape
+    k = 0
+    for i in range(col):
+        for j in range(row):
+            if matrix[i, j] == 1 and matrix[i, j-1] == 0:
+                k += 1
+            if label[i, j] == 1:
+                label[i, j] = k
+    print("label matrix: \n", label)
+    dictionary = {}
+    k = 0
+    for i in range(col):
+        for j in range(row):
+            if label[i, j] > 0:
+                if label[i, j] not in dictionary.values():
+                    k += 1
+                    dictionary[k] = label[i, j]
+                    if label[i - 1, j] > 0:
+                        dictionary[k] = label[i - 1, j]
+                        label[i, j] = label[i - 1, j]
+                    if label[i - 1, j - 1] > 0:
+                        dictionary[k] = label[i - 1, j - 1]
+                        label[i, j] = label[i - 1, j - 1]
+                    if label[i - 1, j + 1] > 0:
+                        dictionary[k] = label[i - 1, j + 1]
+                        label[i, j] = label[i - 1, j + 1]
+                    if label[i, j - 1] > 0:
+                        dictionary[k] = label[i, j - 1]
+                        label[i, j] = label[i, j - 1]
+    k = 0
+    for i in range(col):
+        for j in range(row):
+            if label[i, j] > 0:
+                k += 1
+                if label[i + 1, j] > 0:
+                    dictionary[k] = label[i+1, j]
+                    label[i, j] = label[i + 1, j]
+    print("\n", label, "\n")
+    print(dictionary)
+    return label
+
+
+def max_label(label_matrix):
+    return
+
+
 def fill_holes(toro):
     col, row  = toro.shape
     tmp = np.copy(toro)
@@ -34,6 +82,7 @@ def dilate(to_dilate):
 def floodfill(matrix, x, y):
     return matrix
 
+
 def polish_dots(withdots):
     col, row = withdots.shape
     for i in range(col):
@@ -54,7 +103,6 @@ def polish_dots(withdots):
     return withdots
 
 
-
 if __name__ == '__main__':
     A = np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
                    [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1],
@@ -63,11 +111,11 @@ if __name__ == '__main__':
                    [0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
                    [0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
                    [0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
-                   [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0],
+                   [0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0],
                    [0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0],
-                   [0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0],
-                   [0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
-                   [0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+                   [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+                   [0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+                   [0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0],
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
     A[0][0] = 0
     print(A)
@@ -76,6 +124,9 @@ if __name__ == '__main__':
 
     B = polish_dots(A)
     plt.matshow(B)
+
+    C = connected_label(B)
+    plt.matshow(C)
 
     plt.show()
 
