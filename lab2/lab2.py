@@ -43,21 +43,91 @@ class Figure(object):
 
 
 class Polish(object):
-    def __init__(self, subset_matrix):
-        self.subset = subset_matrix
-        self.n_row, self.n_col = self.subset.shape
-        self.polished = np.zeros((self.n_row, self.n_col), dtype=float)
 
-    def polish(self):
-        n_row = self.n_row
-        n_col = self.n_col
-        print("---polishing matrix with dimension %sx%s---" % (n_row, n_col))
-        self.polished = fill_holes(self.subset)
-        plt.matshow(self.polished)
-        plt.title("hole filling")
-        # polishing outside
+    def connected_label(self, matrix):
+        label = np.copy(matrix)
+        col, row = matrix.shape
+        k = 0
+        for i in range(col):
+            for j in range(row):
+                if matrix[i, j] == 1 and matrix[i, j - 1] == 0:
+                    k += 1
+                if label[i, j] == 1:
+                    label[i, j] = k
+        print("label matrix: \n", label)
+        dictionary = {}
+        k = 0
+        for i in range(col):
+            for j in range(row):
+                if label[i, j] > 0:
+                    if label[i, j] not in dictionary.values():
+                        k += 1
+                        dictionary[k] = label[i, j]
+                        if label[i - 1, j] > 0:
+                            dictionary[k] = label[i - 1, j]
+                            label[i, j] = label[i - 1, j]
+                        if label[i - 1, j - 1] > 0:
+                            dictionary[k] = label[i - 1, j - 1]
+                            label[i, j] = label[i - 1, j - 1]
+                        if label[i - 1, j + 1] > 0:
+                            dictionary[k] = label[i - 1, j + 1]
+                            label[i, j] = label[i - 1, j + 1]
+                        if label[i, j - 1] > 0:
+                            dictionary[k] = label[i, j - 1]
+                            label[i, j] = label[i, j - 1]
+        k = 0
+        for i in range(col):
+            for j in range(row):
+                if label[i, j] > 0:
+                    k += 1
+                    if label[i + 1, j] > 0:
+                        dictionary[k] = label[i + 1, j]
+                        label[i, j] = label[i + 1, j]
+        print("\n", label, "\n")
+        print(dictionary)
+        return label
 
+    def max_label(self, label_matrix):
+        col, row = label_matrix.shape
+        dictionary = {}
+        for i in range(col):
+            for j in range(row):
+                if label_matrix[i, j] > 0:
+                    dictionary[label_matrix[i, j]] = 0
+        for i in range(col):
+            for j in range(row):
+                if label_matrix[i, j] > 0:
+                    for k in range(len(dictionary)):
+                        if label_matrix[i, j] == list(dictionary.keys())[k]:
+                            dictionary[label_matrix[i, j]] += 1
+        tmp = max(dictionary, key=dictionary.get)
+        for i in range(col):
+            for j in range(row):
+                if label_matrix[i, j] > 0:
+                    if label_matrix[i, j] != tmp:
+                        label_matrix[i, j] = 0
 
+        print("\n", dictionary)
+        return label_matrix
+
+    def polish_dots(self, withdots):
+        col, row = withdots.shape
+        for i in range(col):
+            for j in range(row):
+                withdots[0, j] = 0
+                withdots[i, 0] = 0
+                withdots[col - 1, j] = 0
+                withdots[i, row - 1] = 0
+        for i in range(col):
+            for j in range(row):
+                if i > 0 and i < col - 1 and j > 0 and j < row - 1:
+                    if withdots[i, j] == 1:
+                        if withdots[i - 1, j] == 0 and withdots[i, j - 1] == 0 and withdots[i + 1, j] == 0 and withdots[i, j + 1] == 0:
+                            withdots[i, j] = 0
+                    if withdots[i, j] == 0:
+                        if withdots[i - 1, j] == 1 and withdots[i, j - 1] == 1 and withdots[i + 1, j] == 1 and withdots[i, j + 1] == 1:
+                            withdots[i, j] = 1
+        return withdots
 
     def area(self):
         return
@@ -77,8 +147,8 @@ class Circle(object):
 if __name__ == '__main__':
     np.set_printoptions(precision=2)
     plt.close('all')
-    filein = 'moles/melanoma_4.jpg'
-    # filein = 'moles/low_risk_4.jpg'
+    # filein = 'moles/melanoma_4.jpg'
+    filein = 'moles/low_risk_4.jpg'
     # filein = 'moles/medium_risk_4.jpg'
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
@@ -146,8 +216,18 @@ if __name__ == '__main__':
     plt.matshow(subset)
     plt.title('search area')
 
-    polished = Polish(subset)
-    polished.polish()
+    polishing = Polish()
+    polish = polishing.polish_dots(subset)
+    plt.matshow(polish)
+    plt.title('setup polish')
+    polish1 = polishing.connected_label(polish)
+    plt.matshow(polish1)
+    plt.title('label matrix')
+    polished2 = polishing.max_label(polish1)
+    plt.matshow(polished2)
+    plt.title('label connected components')
+
+    #polished.polish()
     #area_polished = polished.area()
     #perimeter_polished = polished.peremeter()
     #circle = Circle(area_polished)

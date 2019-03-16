@@ -47,41 +47,33 @@ def connected_label(matrix):
                 if label[i + 1, j] > 0:
                     dictionary[k] = label[i+1, j]
                     label[i, j] = label[i + 1, j]
-    print("\n", label, "\n")
+    print("\nreduced labeling:\n", label, "\n")
     print(dictionary)
     return label
 
 
 def max_label(label_matrix):
-    return
+    col, row = label_matrix.shape
+    dictionary = {}
+    for i in range(col):
+        for j in range(row):
+            if label_matrix[i, j] > 0:
+                dictionary[label_matrix[i, j]] = 0
+    for i in range(col):
+        for j in range(row):
+            if label_matrix[i, j] > 0:
+                for k in range(len(dictionary)):
+                    if label_matrix[i, j] == list(dictionary.keys())[k]:
+                        dictionary[label_matrix[i, j]] += 1
+    tmp = max(dictionary, key=dictionary.get)
+    for i in range(col):
+        for j in range(row):
+            if label_matrix[i, j] > 0:
+                if label_matrix[i, j] != tmp:
+                    label_matrix[i, j] = 0
 
-
-def fill_holes(toro):
-    col, row  = toro.shape
-    tmp = np.copy(toro)
-
-    return toro
-
-
-def erode(to_erode):
-    col, row  = to_erode.shape
-    tmp = np.copy(to_erode)
-
-    to_erode = tmp
-    return to_erode
-
-
-def dilate(to_dilate):
-    col, row = to_dilate.shape
-    tmp = np.copy(to_dilate)
-
-    to_dilate = tmp
-    return to_dilate
-
-
-def floodfill(matrix, x, y):
-    return matrix
-
+    print("\n", dictionary)
+    return label_matrix
 
 def polish_dots(withdots):
     col, row = withdots.shape
@@ -127,6 +119,9 @@ if __name__ == '__main__':
 
     C = connected_label(B)
     plt.matshow(C)
+
+    D = max_label(C)
+    plt.matshow(D)
 
     plt.show()
 
