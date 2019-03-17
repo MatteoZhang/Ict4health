@@ -20,25 +20,18 @@ def connected_label(matrix):
                 label[i, j] = k
     print("label matrix: \n", label)
     dictionary = {}
-    k = 0
+
     for i in range(col):
         for j in range(row):
             if label[i, j] > 0:
-                if label[i, j] not in dictionary.values():
-                    k += 1
-                    dictionary[k] = label[i, j]
-                    if label[i - 1, j] > 0:
-                        dictionary[k] = label[i - 1, j]
-                        label[i, j] = label[i - 1, j]
-                    if label[i - 1, j - 1] > 0:
-                        dictionary[k] = label[i - 1, j - 1]
-                        label[i, j] = label[i - 1, j - 1]
-                    if label[i - 1, j + 1] > 0:
-                        dictionary[k] = label[i - 1, j + 1]
-                        label[i, j] = label[i - 1, j + 1]
-                    if label[i, j - 1] > 0:
-                        dictionary[k] = label[i, j - 1]
-                        label[i, j] = label[i, j - 1]
+                if label[i - 1, j] > 0:
+                    label[i, j] = label[i - 1, j]
+                if label[i - 1, j - 1] > 0:
+                    label[i, j] = label[i - 1, j - 1]
+                if label[i - 1, j + 1] > 0:
+                    label[i, j] = label[i - 1, j + 1]
+                if label[i, j - 1] > 0:
+                    label[i, j] = label[i, j - 1]
     k = 0
     for i in range(col):
         for j in range(row):
@@ -47,6 +40,7 @@ def connected_label(matrix):
                 if label[i + 1, j] > 0:
                     dictionary[k] = label[i+1, j]
                     label[i, j] = label[i + 1, j]
+
     print("\nreduced labeling:\n", label, "\n")
     print(dictionary)
     return label
