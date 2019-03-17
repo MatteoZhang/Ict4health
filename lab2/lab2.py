@@ -56,10 +56,8 @@ class Polish(object):
                     k += 1
                 if label[i, j] == 1:
                     label[i, j] = k
-        print("label matrix: \n", label)
-        k = 0
-        for i in range(col):
-            for j in range(row):
+        for i in range(col-1):
+            for j in range(row-1):
                 if label[i, j] > 0:
                     if label[i-1, j] > 0:
                         label[label == label[i, j]] = label[i-1, j]
@@ -92,7 +90,6 @@ class Polish(object):
                     if label_matrix[i, j] != tmp:
                         label_matrix[i, j] = 0
 
-        print("\n", dictionary)
         return label_matrix
 
     def fill_hole(self):
@@ -196,9 +193,7 @@ if __name__ == '__main__':
     plt.matshow(polished)
     plt.title('biggest connected component')
 
-    filled = polishing.fill_hole(polished)
-    plt.matshow(filled)
-    plt.title('hole filling process')
+
 
     #find areas and perimeter and ratios
 
