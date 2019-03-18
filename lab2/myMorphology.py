@@ -8,41 +8,27 @@ warnings.filterwarnings(
 )
 
 
-def connected_label(matrix):
+def connected_label(self, matrix):
     label = np.copy(matrix)
     col, row = matrix.shape
     k = 0
     for i in range(col):
         for j in range(row):
-            if matrix[i, j] == 1 and matrix[i, j-1] == 0:
+            if matrix[i, j] == 1 and matrix[i, j - 1] == 0:
                 k += 1
             if label[i, j] == 1:
                 label[i, j] = k
     print("label matrix: \n", label)
-    dictionary = {}
-
-    for i in range(col):
-        for j in range(row):
-            if label[i, j] > 0:
-                if label[i - 1, j] > 0:
-                    label[i, j] = label[i - 1, j]
-                if label[i - 1, j - 1] > 0:
-                    label[i, j] = label[i - 1, j - 1]
-                if label[i - 1, j + 1] > 0:
-                    label[i, j] = label[i - 1, j + 1]
-                if label[i, j - 1] > 0:
-                    label[i, j] = label[i, j - 1]
     k = 0
     for i in range(col):
         for j in range(row):
             if label[i, j] > 0:
-                k += 1
-                if label[i + 1, j] > 0:
-                    dictionary[k] = label[i+1, j]
-                    label[i, j] = label[i + 1, j]
-
-    print("\nreduced labeling:\n", label, "\n")
-    print(dictionary)
+                if label[i - 1, j] > 0:
+                    label[label == label[i, j]] = label[i - 1, j]
+                if label[i - 1, j - 1] > 0:
+                    label[label == label[i, j]] = label[i - 1, j - 1]
+                if label[i - 1, j + 1] > 0:
+                    label[label == label[i, j]] = label[i - 1, j + 1]
     return label
 
 
