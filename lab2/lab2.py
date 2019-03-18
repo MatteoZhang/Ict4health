@@ -56,7 +56,6 @@ class Polish(object):
                     k += 1
                 if label[i, j] == 1:
                     label[i, j] = k
-        print("label matrix: \n", label)
         k = 0
         for i in range(col):
             for j in range(row):
@@ -91,12 +90,23 @@ class Polish(object):
                 if label_matrix[i, j] > 0:
                     if label_matrix[i, j] != tmp:
                         label_matrix[i, j] = 0
-
-        print("\n", dictionary)
         return label_matrix
 
-    def fill_hole(self):
-        return
+    def fill_hole(self, to_fill):
+        inverse = 1 - to_fill
+        col, row = to_fill.shape
+        for i in range(2, col-1):
+            for j in range(2, row-1):
+                if to_fill[i, j] == 1:
+                    if inverse[i-1, j] == 1:
+                        to_fill[i-1, j] = 1
+                    if inverse[i+1, j] == 1:
+                        to_fill[i+1, j] = 1
+                    if inverse[i, j-1] == 1:
+                        to_fill[i, j-1] = 1
+                    if inverse[i, j+1] == 1:
+                        to_fill[i, j+1] = 1
+        return to_fill
 
     def area(self):
         return
