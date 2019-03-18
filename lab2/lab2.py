@@ -50,6 +50,7 @@ class Polish(object):
         label = np.copy(matrix)
         col, row = matrix.shape
         k = 0
+        matrix[0,0] = 0
         for i in range(col):
             for j in range(row):
                 if matrix[i, j] == 1 and matrix[i, j - 1] == 0:
@@ -57,8 +58,8 @@ class Polish(object):
                 if label[i, j] == 1:
                     label[i, j] = k
         k = 0
-        for i in range(col):
-            for j in range(row):
+        for i in range(2, col-1):
+            for j in range(2, row-1):
                 if label[i, j] > 0:
                     if label[i-1, j] > 0:
                         label[label == label[i, j]] = label[i-1, j]
@@ -90,23 +91,50 @@ class Polish(object):
                 if label_matrix[i, j] > 0:
                     if label_matrix[i, j] != tmp:
                         label_matrix[i, j] = 0
+        label_matrix[label_matrix > 0] = 1
         return label_matrix
 
     def fill_hole(self, to_fill):
-        inverse = 1 - to_fill
+        label = np.copy(to_fill)
+        # inverse matrix
+        inverse = np.copy(1 - to_fill)
         col, row = to_fill.shape
-        for i in range(2, col-1):
-            for j in range(2, row-1):
-                if to_fill[i, j] == 1:
-                    if inverse[i-1, j] == 1:
-                        to_fill[i-1, j] = 1
-                    if inverse[i+1, j] == 1:
-                        to_fill[i+1, j] = 1
-                    if inverse[i, j-1] == 1:
-                        to_fill[i, j-1] = 1
-                    if inverse[i, j+1] == 1:
-                        to_fill[i, j+1] = 1
+        # dilate
+        for i in range(col):
+            for j in range(row):
+                if label[i, j] == 1:
+                    to_fill[i - 1, j] = 1
+                    to_fill[i + 1, j] = 1
+                    to_fill[i, j - 1] = 1
+                    to_fill[i, j + 1] = 1
+                    to_fill[i - 1, j - 1] = 1
+                    to_fill[i - 1, j + 1] = 1
+                    to_fill[i + 1, j - 1] = 1
+                    to_fill[i + 1, j + 1] = 1
+        '''for i in range(2,col-1):
+            for j in range(2,row-1):
+                if (label[i-1, j] == 1 and label[i-1, j-1] == 1 and label[i-1, j+1] == 1 and
+                    label[i + 1, j] == 1 and label[i + 1, j - 1] == 1 and label[i + 1, j + 1] == 1 and
+                        label[i, j-1] == 1 and label[i, j+1] == 1):
+                    to_fill[i, j] = 1'''
         return to_fill
+
+    def dilate(self,to_dilate):
+        label = np.copy(to_dilate)
+        col, row = to_dilate.shape
+        # dilate
+        for i in range(col):
+            for j in range(row):
+                if label[i, j] == 1:
+                    to_dilate[i - 1, j] = 1
+                    to_dilate[i + 1, j] = 1
+                    to_dilate[i, j - 1] = 1
+                    to_dilate[i, j + 1] = 1
+                    to_dilate[i - 1, j - 1] = 1
+                    to_dilate[i - 1, j + 1] = 1
+                    to_dilate[i + 1, j - 1] = 1
+                    to_dilate[i + 1, j + 1] = 1
+        return to_dilate
 
     def area(self):
         return
@@ -209,6 +237,17 @@ if __name__ == '__main__':
     filled = polishing.fill_hole(polished)
     plt.matshow(filled)
     plt.title('hole filling process')
+
+    inverse = polishing.connected_label(1-filled)
+    inversemax = polishing.max_label(inverse)
+    inversemax = 1-inversemax
+    plt.matshow(inversemax)
+    plt.title('reverse connected component')
+
+    bigger = polishing.dilate(inversemax)
+    plt.matshow(bigger)
+    plt.title('dilated')
+
 
     #find areas and perimeter and ratios
 

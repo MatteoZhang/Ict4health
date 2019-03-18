@@ -8,7 +8,7 @@ warnings.filterwarnings(
 )
 
 
-def connected_label(self, matrix):
+def connected_label(matrix):
     label = np.copy(matrix)
     col, row = matrix.shape
     k = 0
@@ -51,7 +51,7 @@ def max_label(label_matrix):
             if label_matrix[i, j] > 0:
                 if label_matrix[i, j] != tmp:
                     label_matrix[i, j] = 0
-
+    label_matrix[label_matrix > 0] = 1
     print("\n", dictionary)
     return label_matrix
 
@@ -74,6 +74,20 @@ def polish_dots(withdots):
                         withdots[i, j] = 1
     return withdots
 
+
+def fill_hole(to_fill):
+    label = np.copy(to_fill)
+    inverse = np.copy(1 - to_fill)
+    col, row = to_fill.shape
+    # dilate
+    for i in range(col):
+        for j in range(row):
+            if label[i, j] ==1 :
+                to_fill[i-1, j] = 1
+                to_fill[i+1, j] = 1
+                to_fill[i, j-1] = 1
+                to_fill[i, j+1] = 1
+    return to_fill
 
 if __name__ == '__main__':
     A = np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
@@ -102,6 +116,9 @@ if __name__ == '__main__':
 
     D = max_label(C)
     plt.matshow(D)
+
+    E = fill_hole(D)
+    plt.matshow(E)
 
     plt.show()
 
