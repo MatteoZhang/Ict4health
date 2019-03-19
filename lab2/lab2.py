@@ -94,31 +94,6 @@ class Polish(object):
         label_matrix[label_matrix > 0] = 1
         return label_matrix
 
-    def fill_hole(self, to_fill):
-        label = np.copy(to_fill)
-        # inverse matrix
-        inverse = np.copy(1 - to_fill)
-        col, row = to_fill.shape
-        # dilate
-        for i in range(col):
-            for j in range(row):
-                if label[i, j] == 1:
-                    to_fill[i - 1, j] = 1
-                    to_fill[i + 1, j] = 1
-                    to_fill[i, j - 1] = 1
-                    to_fill[i, j + 1] = 1
-                    to_fill[i - 1, j - 1] = 1
-                    to_fill[i - 1, j + 1] = 1
-                    to_fill[i + 1, j - 1] = 1
-                    to_fill[i + 1, j + 1] = 1
-        '''for i in range(2,col-1):
-            for j in range(2,row-1):
-                if (label[i-1, j] == 1 and label[i-1, j-1] == 1 and label[i-1, j+1] == 1 and
-                    label[i + 1, j] == 1 and label[i + 1, j - 1] == 1 and label[i + 1, j + 1] == 1 and
-                        label[i, j-1] == 1 and label[i, j+1] == 1):
-                    to_fill[i, j] = 1'''
-        return to_fill
-
     def dilate(self,to_dilate):
         label = np.copy(to_dilate)
         col, row = to_dilate.shape
@@ -135,6 +110,17 @@ class Polish(object):
                     to_dilate[i + 1, j - 1] = 1
                     to_dilate[i + 1, j + 1] = 1
         return to_dilate
+
+    def erode(self, to_erode):
+        label = np.copy(to_erode)
+        col, row = to_erode.shape
+        # erode
+        for i in range(2, col - 1):
+            for j in range(2, row - 1):
+                if (label[i - 1, j] == 1 and label[i + 1, j] == 1 and
+                        label[i, j - 1] == 1 and label[i, j + 1] == 1):
+                    to_erode[i, j] = 2
+        return to_erode
 
     def area(self):
         return
@@ -234,21 +220,21 @@ if __name__ == '__main__':
     plt.matshow(polished)
     plt.title('biggest connected component')
 
-    filled = polishing.fill_hole(polished)
-    plt.matshow(filled)
-    plt.title('hole filling process')
+    bigger = polishing.dilate(polished)
+    plt.matshow(bigger)
+    plt.title('dilated')
 
-    inverse = polishing.connected_label(1-filled)
+    inverse = polishing.connected_label(1-bigger)
     inversemax = polishing.max_label(inverse)
     inversemax = 1-inversemax
     plt.matshow(inversemax)
     plt.title('reverse connected component')
 
-    bigger = polishing.dilate(inversemax)
-    plt.matshow(bigger)
-    plt.title('dilated')
 
 
+    eroded = polishing.erode(inversemax)
+    plt.matshow(eroded)
+    plt.title('perimeter and area')
     #find areas and perimeter and ratios
 
     plt.tight_layout()
