@@ -7,6 +7,7 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 import warnings
+from myMorphology import *
 
 warnings.filterwarnings(
     action='ignore', module='matplotlib.figure', category=UserWarning,
@@ -44,107 +45,11 @@ class Figure(object):
         return im_2d_quantized.reshape((self.N1, self.N2, self.N3))
 
 
-class Polish(object):
-
-    def connected_label(self, matrix):
-        label = np.copy(matrix)
-        col, row = matrix.shape
-        k = 0
-        matrix[0,0] = 0
-        for i in range(col):
-            for j in range(row):
-                if matrix[i, j] == 1 and matrix[i, j - 1] == 0:
-                    k += 1
-                if label[i, j] == 1:
-                    label[i, j] = k
-        k = 0
-        for i in range(2, col-1):
-            for j in range(2, row-1):
-                if label[i, j] > 0:
-                    if label[i-1, j] > 0:
-                        label[label == label[i, j]] = label[i-1, j]
-                    if label[i-1, j-1] > 0:
-                        label[label == label[i, j]] = label[i-1, j-1]
-                    if label[i-1, j+1] > 0:
-                        label[label == label[i, j]] = label[i-1, j+1]
-        return label
-
-    def max_label(self, label_matrix):
-        col, row = label_matrix.shape
-        dictionary = {}
-
-        for i in range(col):
-            for j in range(row):
-                if label_matrix[i, j] > 0:
-                    dictionary[label_matrix[i, j]] = 0
-
-        for i in range(col):
-            for j in range(row):
-                if label_matrix[i, j] > 0:
-                    for k in range(len(dictionary)):
-                        if label_matrix[i, j] == list(dictionary.keys())[k]:
-                            dictionary[label_matrix[i, j]] += 1
-
-        tmp = max(dictionary, key=dictionary.get)
-        for i in range(col):
-            for j in range(row):
-                if label_matrix[i, j] > 0:
-                    if label_matrix[i, j] != tmp:
-                        label_matrix[i, j] = 0
-        label_matrix[label_matrix > 0] = 1
-        return label_matrix
-
-    def dilate(self,to_dilate):
-        label = np.copy(to_dilate)
-        col, row = to_dilate.shape
-        # dilate
-        for i in range(col):
-            for j in range(row):
-                if label[i, j] == 1:
-                    to_dilate[i - 1, j] = 1
-                    to_dilate[i + 1, j] = 1
-                    to_dilate[i, j - 1] = 1
-                    to_dilate[i, j + 1] = 1
-                    to_dilate[i - 1, j - 1] = 1
-                    to_dilate[i - 1, j + 1] = 1
-                    to_dilate[i + 1, j - 1] = 1
-                    to_dilate[i + 1, j + 1] = 1
-        return to_dilate
-
-    def erode(self, to_erode):
-        label = np.copy(to_erode)
-        col, row = to_erode.shape
-        # erode
-        for i in range(2, col - 1):
-            for j in range(2, row - 1):
-                if (label[i - 1, j] == 1 and label[i + 1, j] == 1 and
-                        label[i, j - 1] == 1 and label[i, j + 1] == 1):
-                    to_erode[i, j] = 2
-        return to_erode
-
-    def area(self):
-        return
-
-    def perimeter(self):
-        return
-
-
-class Circle(object):
-    def __init__(self, area_obj):
-        self.area = area_obj
-
-    def area(self):
-        return
-
-    def perimeter(self):
-        return
-
-
 if __name__ == '__main__':
     np.set_printoptions(precision=2)
     plt.close('all')
-    filein = 'moles/melanoma_4.jpg'
-    # filein = 'moles/low_risk_4.jpg'
+    # filein = 'moles/melanoma_4.jpg'
+    filein = 'moles/low_risk_4.jpg'
     # filein = 'moles/medium_risk_4.jpg'
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
@@ -209,6 +114,7 @@ if __name__ == '__main__':
         else:
             cond = False
             # subset is the serach area
+
     plt.matshow(subset)
     plt.title('search area')
 
@@ -230,16 +136,26 @@ if __name__ == '__main__':
     plt.matshow(inversemax)
     plt.title('reverse connected component')
 
-
-
     eroded = polishing.erode(inversemax)
     plt.matshow(eroded)
     plt.title('perimeter and area')
     #find areas and perimeter and ratios
 
+    perimeter = polishing.perimeter(eroded)
+    area = polishing.area(eroded)
+
+    only_perimeter = polishing.only_perimeter(eroded)
+    plt.matshow(only_perimeter)
+    plt.title('perimeter')
+
+    perimeter_circle = ((area/np.pi)**0.5)*2*3.14
+    perimeter_ratio = perimeter/perimeter_circle
+
     plt.tight_layout()
     plt.show()
 
-# TODO  complete code
+    print("Mole perimeter: \t", round(perimeter, 2))
+    print("Circle perimeter: \t", round(perimeter_circle, 2))
+    print("Ratio:\t", round(perimeter_ratio, 2))
 
 
