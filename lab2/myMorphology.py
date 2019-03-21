@@ -54,8 +54,8 @@ class Polish(object):
         label = np.copy(to_dilate)
         col, row = to_dilate.shape
         # dilate
-        for i in range(col):
-            for j in range(row):
+        for i in range(2, col-1):
+            for j in range(2, row-1):
                 if label[i, j] == 1:
                     to_dilate[i - 1, j] = 1
                     to_dilate[i + 1, j] = 1
