@@ -25,6 +25,7 @@ class Figure(object):
         self.im_2d = self.original.reshape((N1 * N2, N3))
         # pixel in position i.j goes to position k=(i-1)*N2+j)
         self.Nr, self.Nc = self.im_2d.shape
+        # change N_cluster to outline the mole
         self.N_cluster = 4
         self.k_means = KMeans(n_clusters=self.N_cluster, random_state=0)
         self.k_means.fit(self.im_2d)
@@ -48,9 +49,66 @@ class Figure(object):
 if __name__ == '__main__':
     np.set_printoptions(precision=2)
     plt.close('all')
-    filein = 'moles/melanoma_27.jpg'
+
+    # filein = 'moles/low_risk_1.jpg'
+    # filein = 'moles/low_risk_2.jpg'
+    # filein = 'moles/low_risk_3.jpg'
     # filein = 'moles/low_risk_4.jpg'
+    # filein = 'moles/low_risk_5.jpg'
+    # filein = 'moles/low_risk_6.jpg'
+    # filein = 'moles/low_risk_7.jpg'
+    # filein = 'moles/low_risk_8.jpg'
+    # filein = 'moles/low_risk_9.jpg'
+    # filein = 'moles/low_risk_10.jpg'
+    filein = 'moles/low_risk_11.jpg'
+
+    # filein = 'moles/medium_risk_1.jpg'
+    # filein = 'moles/medium_risk_2.jpg'
+    # filein = 'moles/medium_risk_3.jpg'
+    # filein = 'moles/medium_risk_3_h.jpg'
+    # filein = 'moles/medium_risk_3_s.jpg'
     # filein = 'moles/medium_risk_4.jpg'
+    # filein = 'moles/medium_risk_5.jpg'
+    # filein = 'moles/medium_risk_6.jpg'
+    # filein = 'moles/medium_risk_7.jpg'
+    # filein = 'moles/medium_risk_8.jpg'
+    # filein = 'moles/medium_risk_9.jpg'
+    # filein = 'moles/medium_risk_10.jpg'
+    # filein = 'moles/medium_risk_11.jpg'
+    # filein = 'moles/medium_risk_12.jpg'
+    # filein = 'moles/medium_risk_13.jpg'
+    # filein = 'moles/medium_risk_14.jpg'
+    # filein = 'moles/medium_risk_15.jpg'
+    # filein = 'moles/medium_risk_16.jpg'
+
+    # filein = 'moles/melanoma_1.jpg'
+    # filein = 'moles/melanoma_2.jpg'
+    # filein = 'moles/melanoma_3.jpg'
+    # filein = 'moles/melanoma_4.jpg'
+    # filein = 'moles/melanoma_5.jpg'
+    # filein = 'moles/melanoma_6.jpg'
+    # filein = 'moles/melanoma_7.jpg'
+    # filein = 'moles/melanoma_8.jpg'
+    # filein = 'moles/melanoma_9.jpg'
+    # filein = 'moles/melanoma_10.jpg'
+    # filein = 'moles/melanoma_11.jpg'
+    # filein = 'moles/melanoma_12.jpg'
+    # filein = 'moles/melanoma_13.jpg'
+    # filein = 'moles/melanoma_14.jpg'
+    # filein = 'moles/melanoma_15.jpg'
+    # filein = 'moles/melanoma_16.jpg'
+    # filein = 'moles/melanoma_17.jpg'
+    # filein = 'moles/melanoma_18.jpg'
+    # filein = 'moles/melanoma_19.jpg'
+    # filein = 'moles/melanoma_20.jpg'
+    # filein = 'moles/melanoma_21.jpg'
+    # filein = 'moles/melanoma_22.jpg'
+    # filein = 'moles/melanoma_23.jpg'
+    # filein = 'moles/melanoma_24.jpg'
+    # filein = 'moles/melanoma_25.jpg'
+    # filein = 'moles/melanoma_26.jpg'
+    # filein = 'moles/melanoma_27.jpg'
+
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
     fig_quantized = fig_original.quantized()
@@ -115,38 +173,42 @@ if __name__ == '__main__':
             cond = False
             # subset is the serach area
 
+    # my functions
     plt.matshow(subset)
     plt.title('search area')
 
     polishing = Polish()
     polish = polishing.connected_label(subset)
-    plt.matshow(polish)
-    plt.title('label matrix')
+    #plt.matshow(polish)
+    #plt.title('label matrix')
     polished = polishing.max_label(polish)
-    plt.matshow(polished)
-    plt.title('biggest connected component')
+    #plt.matshow(polished)
+    #plt.title('biggest connected component')
 
     bigger = polishing.dilate(polished)
-    plt.matshow(bigger)
-    plt.title('dilated')
+    #plt.matshow(bigger)
+    #plt.title('dilated')
 
     inverse = polishing.connected_label(1-bigger)
+    #plt.matshow(inverse)
+    #plt.title('reverse connected component')
     inversemax = polishing.max_label(inverse)
     inversemax = 1-inversemax
-    plt.matshow(inversemax)
-    plt.title('reverse connected component')
+    #plt.matshow(inversemax)
+    #plt.title('reverse max component')
 
     eroded = polishing.erode(inversemax)
     plt.matshow(eroded)
     plt.title('perimeter and area')
-    #find areas and perimeter and ratios
+
+    # find areas and perimeter and ratios
 
     perimeter = polishing.perimeter(eroded)
     area = polishing.area(eroded)
 
     only_perimeter = polishing.only_perimeter(eroded)
-    plt.matshow(only_perimeter)
-    plt.title('perimeter')
+    #plt.matshow(only_perimeter)
+    #plt.title('perimeter')
 
     perimeter_circle = ((area/np.pi)**0.5)*2*3.14
     perimeter_ratio = perimeter/perimeter_circle
@@ -154,8 +216,10 @@ if __name__ == '__main__':
     plt.tight_layout()
     plt.show()
 
-    print("Mole perimeter: \t", round(perimeter, 2))
-    print("Circle perimeter: \t", round(perimeter_circle, 2))
-    print("Ratio:\t", round(perimeter_ratio, 2))
+    print("(Mole perimeter,Circle perimeter,Ratio):\t",
+          round(perimeter, 2), "\t",
+          round(perimeter_circle, 2), "\t",
+          round(perimeter_ratio, 2))
+
 
 

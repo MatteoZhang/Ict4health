@@ -11,5 +11,7 @@ ktest=[8,9,10];% indexes of patients for testing
 telapsed = toc(tstart);
 disp(['first part, elapsed time ',num2str(telapsed),' s'])
 %% HMM training phase....
+
 %% HMM testing phase....
+
 
