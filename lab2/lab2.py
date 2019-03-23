@@ -15,6 +15,9 @@ warnings.filterwarnings(
              'so results might be incorrect.')
 )
 
+# number of clusters
+# minimum 2 to maximum 6 if we take other values the quantized image may not be realistic
+NC = 6
 
 class Figure(object):
     def __init__(self, file):
@@ -26,7 +29,7 @@ class Figure(object):
         # pixel in position i.j goes to position k=(i-1)*N2+j)
         self.Nr, self.Nc = self.im_2d.shape
         # change N_cluster to outline the mole
-        self.N_cluster = 4
+        self.N_cluster = NC
         self.k_means = KMeans(n_clusters=self.N_cluster, random_state=0)
         self.k_means.fit(self.im_2d)
         self.k_means_centroids = self.k_means.cluster_centers_.astype('uint8')
@@ -60,7 +63,7 @@ if __name__ == '__main__':
     # filein = 'moles/low_risk_8.jpg'
     # filein = 'moles/low_risk_9.jpg'
     # filein = 'moles/low_risk_10.jpg'
-    filein = 'moles/low_risk_11.jpg'
+    # filein = 'moles/low_risk_11.jpg'
 
     # filein = 'moles/medium_risk_1.jpg'
     # filein = 'moles/medium_risk_2.jpg'
@@ -107,7 +110,7 @@ if __name__ == '__main__':
     # filein = 'moles/melanoma_24.jpg'
     # filein = 'moles/melanoma_25.jpg'
     # filein = 'moles/melanoma_26.jpg'
-    # filein = 'moles/melanoma_27.jpg'
+    filein = 'moles/melanoma_27.jpg'
 
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
