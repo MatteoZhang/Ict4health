@@ -1,19 +1,27 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Polish(object):
+
 
     def connected_label(self, matrix):
         label = np.copy(matrix)
         col, row = matrix.shape
         k = 0
-        matrix[0,0] = 0
+        matrix[0, 0] = 0
+        # label matrix initialization
         for i in range(col):
             for j in range(row):
                 if matrix[i, j] == 1 and matrix[i, j - 1] == 0:
                     k += 1
                 if label[i, j] == 1:
                     label[i, j] = k
+
+        plt.matshow(label)
+        plt.title('label init')
         k = 0
+        # connected component core
         for i in range(2, col-1):
             for j in range(2, row-1):
                 if label[i, j] > 0:

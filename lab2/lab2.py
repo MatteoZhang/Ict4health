@@ -17,7 +17,7 @@ warnings.filterwarnings(
 
 # number of clusters
 # minimum 2 to maximum 6 if we take other values the quantized image may not be realistic
-NC = 6
+NC = 3
 
 class Figure(object):
     def __init__(self, file):
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     # filein = 'moles/melanoma_5.jpg'
     # filein = 'moles/melanoma_6.jpg'
     # filein = 'moles/melanoma_7.jpg'
-    # filein = 'moles/melanoma_8.jpg'
+    filein = 'moles/melanoma_8.jpg'
     # filein = 'moles/melanoma_9.jpg'
     # filein = 'moles/melanoma_10.jpg'
     # filein = 'moles/melanoma_11.jpg'
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     # filein = 'moles/melanoma_24.jpg'
     # filein = 'moles/melanoma_25.jpg'
     # filein = 'moles/melanoma_26.jpg'
-    filein = 'moles/melanoma_27.jpg'
+    # filein = 'moles/melanoma_27.jpg'
 
     fig_original = Figure(filein)
     fig_original.show_figure('original image')
@@ -182,23 +182,23 @@ if __name__ == '__main__':
 
     polishing = Polish()
     polish = polishing.connected_label(subset)
-    #plt.matshow(polish)
-    #plt.title('label matrix')
+    plt.matshow(polish)
+    plt.title('label matrix')
     polished = polishing.max_label(polish)
-    #plt.matshow(polished)
-    #plt.title('biggest connected component')
+    plt.matshow(polished)
+    plt.title('biggest connected component')
 
     bigger = polishing.dilate(polished)
-    #plt.matshow(bigger)
-    #plt.title('dilated')
+    plt.matshow(bigger)
+    plt.title('dilated')
 
     inverse = polishing.connected_label(1-bigger)
-    #plt.matshow(inverse)
-    #plt.title('reverse connected component')
+    plt.matshow(inverse)
+    plt.title('reverse connected component')
     inversemax = polishing.max_label(inverse)
     inversemax = 1-inversemax
-    #plt.matshow(inversemax)
-    #plt.title('reverse max component')
+    plt.matshow(inversemax)
+    plt.title('reverse max component')
 
     eroded = polishing.erode(inversemax)
     plt.matshow(eroded)
@@ -210,8 +210,8 @@ if __name__ == '__main__':
     area = polishing.area(eroded)
 
     only_perimeter = polishing.only_perimeter(eroded)
-    #plt.matshow(only_perimeter)
-    #plt.title('perimeter')
+    plt.matshow(only_perimeter)
+    plt.title('perimeter')
 
     perimeter_circle = ((area/np.pi)**0.5)*2*3.14
     perimeter_ratio = perimeter/perimeter_circle
