@@ -83,6 +83,7 @@ if __name__ == "__main__":
                 array_to_copy[F0[index]] = y_hat[index]
             X_5[j-1] = array_to_copy
     # rounding the values
+
     df_X = pd.DataFrame(X_5, columns=feature).astype(float)
     decimal = pd.Series(rounding, index=feature)
     df_X_rounded = df_X.round(decimal)
@@ -103,5 +104,7 @@ if __name__ == "__main__":
     # C:\Program Files (x86)\Graphviz2.38\bin\dot.exe
     # C:\Program Files (x86)\Graphviz2.38\bin>dot.exe -Tpng Tree.dot > Tree.png
     # Tree is in the same folder as dot.exe also Tree.dot should be the same
+    array = clf.feature_importances_
+    print("feature importance:  ", array, "\n")
     print("----END----")
 
