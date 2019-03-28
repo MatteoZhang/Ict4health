@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # C:\Program Files (x86)\Graphviz2.38\bin\dot.exe
     # C:\Program Files (x86)\Graphviz2.38\bin>dot.exe -Tpng Tree.dot > Tree.png
     # Tree is in the same folder as dot.exe also Tree.dot should be the same
-    array = clf.feature_importances_
-    print("feature importance:  ", array, "\n")
+    array = clf.feature_importance_
+    print("feature importance: \n",
+          array, "\n")
     print("----END----")
-
