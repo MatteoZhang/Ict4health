@@ -142,12 +142,15 @@ end
 
 telapsed2=toc(tstart2);
 
-% result printing erasable
+% results
 ktest
 ktrain
 
-result1 = [train_sensitivity train_specificity; test_sensitivity test_specificity]
-result2 = [pqtrain_sensitivity pqtrain_specificity; pqtest_sensitivity pqtest_specificity]
+[train_specificity,test_specificity]
+[train_sensitivity,test_sensitivity]
+
+[pqtrain_specificity,pqtest_specificity]
+[pqtrain_sensitivity,pqtest_sensitivity]
 
 disp(['Time Random init ', num2str(telapsed1+telapsed), ' s'])
 disp(['Time Circulant init ', num2str(telapsed2+telapsed), ' s'])
